@@ -1,0 +1,163 @@
+
+/***************************************************************************************************/
+/* Fichier menu_navigation.php */
+/***************************************************************************************************/
+
+/* Menu basé sur : https://www.creativejuiz.fr/blog/tutoriels/menu-deroulant-css3-transition-max-height */
+
+
+
+
+
+
+
+
+
+
+
+/* MENU ENTIER */
+#menu{
+	background: <?php echo $col['background']['normal']; ?>;
+}
+
+
+
+/* ELEMENTS du MENU : survol */
+
+#menu > li:hover{
+	 /*?php echo $border['big']['in']; ?>
+	 height:21px;*/
+}
+
+
+
+
+
+
+
+/* SOUS-MENU */
+#menu ul {
+	position: absolute;
+	top: 25px;								/* Origine du sous-menu / Doit être égal à menu "#menu a" -> "line-height" */
+	/*margin: 0;*/
+	max-height:0em;							/* Cacher le menu */
+	overflow: hidden;						/* Histoire de n'afficher que les textes du menu affiché et pas les autres */
+	
+	background: <?php echo $col['background']['normal']; ?>;
+	
+	transition: max-height 0s linear;		/* Suppression de la transition de retour */
+}
+
+
+
+
+
+
+
+
+/* SOUS-MENU lorsqu'il est ouvert */
+#menu > li:hover ul {
+	/* valeur au pif... Simplement pour qu'il y ait la place d'afficher la sous-liste entière, donc voir large
+	   et prévoir qu'on verra pas forcément cette hauteur, mais l'animation d'ouverture en dépendra */
+	max-height: 20em;
+	transition: max-height 0.25s linear;
+	
+	padding: 1px;
+	<?php echo $border['big']['out']; ?>
+}
+
+
+/* ELEMENTS du SOUS-MENU lorsqu'ils sont survolés */
+#menu > li li:hover {
+	background: <?php echo $col['background']['selected']; ?>;
+}
+
+
+
+
+
+
+
+
+
+
+/* ELEMENTS des MENUS & SOUS-MENUS */
+#menu > li,
+#menu > li li {
+	position: relative;
+	display:inline-block;
+}
+
+
+
+/* ELEMENTS des SOUS-MENUS */
+
+#menu > li li {
+	text-align:left;
+	width:100%;
+}
+
+/* Faire en sorte que les éléments du sous-menu restent sur une ligne */
+#menu li a {
+	white-space:nowrap;
+}
+
+
+
+
+
+
+#menu a:hover{
+	
+	cursor: default;
+}
+
+
+
+
+/* LIENS du MENU et du SOUS-MENU */
+#menu a {
+	display:block;						/* Faire qu'ils prennent la taille du bloc entier (qu'on puisse cliquer facilement dessus) */
+	text-decoration:none;
+	color: <?php echo $col['text']['black']; ?>;
+	
+	text-align:left;
+	
+	padding-left:1.5em; padding-right:1.5em;
+	line-height:25px;					/* Hauteur du menu / Doit être égal à "#menu ul" -> "top" */
+}
+
+
+
+
+
+
+/* LIENS SOUS-MENU : survol */
+#menu li li a:hover {
+	color: <?php echo $col['text']['white']; ?>;
+}
+
+
+
+
+
+
+
+
+
+
+/* Séparateur dans les menus */
+#menu hr{
+	margin:0;
+}
+
+
+
+
+
+
+
+
+
+
+

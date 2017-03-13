@@ -1,0 +1,40 @@
+/***************************************************************************************************/
+/* Fichier tableaux.php */
+/***************************************************************************************************/
+
+
+/* TABLEAUX, LIGNES ET CELLULES */
+
+
+
+table{
+	width:100%;
+	font-size:105%;
+	
+}
+
+tr{
+	
+}
+th, td{
+	padding:0.5em 1.0em;
+	line-height:1.5em;
+}
+
+th{
+	font-size:90%;
+	color: <?php echo $col['text']['grey']; ?>;
+}
+
+td{
+	border-top-style:solid;
+	border-top-color:<?php echo $col['separator'] ; ?>;
+	border-top-width:<?php echo $border['size']; ?>;
+}
+
+
+
+
+td.gris{
+	color: <?php echo $col['text']['grey']; ?>;
+}

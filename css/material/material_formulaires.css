@@ -1,0 +1,502 @@
+/***************************************************************************************************/
+/* Fichier material formulaires.php */
+/***************************************************************************************************/
+
+
+/*
+
+.form-gauche,
+.form-droite,
+.form-ligne{
+	
+	border-color:lightgrey;
+	border-width:3px;
+	border-style:solid;
+	margin:1px;
+	
+}
+
+*/
+
+
+
+form{
+	padding:1em 1em;
+}
+
+fieldset{
+	border-style:none;
+}
+
+
+
+.form-ligne{
+	margin-top:1.5em;
+}
+
+
+.form-ligne > label, .form-ligne > input, .form-ligne > textarea, .form-ligne > select{
+	display:block;
+	width:100%;
+}
+
+
+.form-tiers-1, .form-tiers-2, .form-tiers-3, .form-tiers-1-2, .form-gauche, .form-droite{
+	display:inline-block;
+}
+
+
+.form-gauche,
+.form-droite{
+	width:46.5%;
+}
+
+.form-gauche{
+}
+.form-droite{
+	float:right;
+}
+
+
+.form-tiers-1, .form-tiers-2, .form-tiers-3{
+	width:31%;
+	margin-left:1em;
+	margin-right:1em;
+}
+.form-tiers-1-2{
+	width:58%;
+	margin-left:1em;
+	margin-right:2em;
+}
+
+
+
+
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+
+
+
+
+
+form p{
+	margin-top: 2em;
+	margin-bottom: 1.75em;
+	margin-left: 0em;
+	margin-right: 0em;
+	font-style: italic;
+}
+
+
+
+.form-boutons{
+	width:100%;
+	padding-top:1em;
+	
+	text-align:center;
+	
+	border-top-style:solid;
+	border-top-color:<?php echo $col['separator']; ?>;
+	border-top-width:1px;
+}
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+
+
+
+
+legend{
+	margin-top:1.5em;
+	margin-bottom:1em;
+	margin-left:0;
+	margin-right:0;
+	font-size:150%;
+	
+	line-height:1.5em;
+	
+	border-bottom-style:solid;
+	border-bottom-color:<?php echo $col['separator']; ?>;
+	border-bottom-width:1px;
+	
+}
+/* Suppression du margin-top de la première légende du form */
+form > fieldset:first-of-type > legend:first-of-type{
+	margin-top:0;
+}
+
+
+
+
+label{
+	line-height:2em;
+}
+
+
+label input{
+	display:block;
+	width:100%;
+	padding:0.5em 0em;
+	
+}
+
+
+
+/* Labels qui seront écrits en plus petit au dessus des champs de texte - ne s'appliquera pas aux radio et checkbox */
+.libelle{
+	display:block;
+	font-size:80%;
+	margin-top:0;
+	margin-bottom:0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/* CHAMPS DE TEXTE */
+
+
+
+
+/* Champ de texte */
+input[type=textbox], input[type=number], input[type=password], input[type=date], textarea, select{
+	line-height:2em;
+	font-size:105%;
+	
+	background: inherit;
+	color:<?php echo $col['text']['main']; ?>;								/* COLOR: Text NORMAL */
+	
+	border-style:none;
+}
+
+
+input[type=textbox], input[type=number], input[type=password], input[type=date], textarea{
+	margin-bottom:1em;
+	min-width:49%;
+		width:100%;
+	/*	max-width:100%;
+	*/
+	
+}
+select{
+	height:2em;
+	min-width:32%;
+	text-align:center;
+}
+
+
+
+/* Zone de texte */
+textarea{
+	display:block;
+	resize:vertical;
+	
+	min-height:2em;
+}
+
+
+
+
+/* Champ de texte activé */
+input[type=textbox]:enabled, input[type=number]:enabled, input[type=password]:enabled, input[type=date]:enabled,
+textarea:enabled,
+select{
+	border-bottom-style: solid;
+	border-bottom-color: <?php echo $col['grey']; ?>;					/* COLOR: Text GREY */
+	border-bottom-width: <?php echo $border['size']; ?>;				/* SIZE: Border size */
+	
+	transition: border-bottom-color 0.075s linear,
+				box-shadow 0.075s linear,
+				background 0.075s linear;
+}
+
+
+
+
+/* Champ de texte survolé*/
+input[type=textbox]:enabled:hover, input[type=number]:enabled:hover, input[type=password]:enabled:hover, input[type=date]:enabled:hover,
+textarea:enabled:hover,
+select:enabled:hover{
+	/* background:<?php echo $col['background'][2]; ?>; */
+	<?php echo $shadow['SMALLER']; ?>;    								/* SHADOW: Small */
+}
+
+
+
+
+
+/* Champ de texte désactivé*/
+input[type=textbox]:disabled, input[type=number]:disabled, input[type=password]:disabled,
+textarea:disabled{
+	border-bottom-style: dotted;
+	border-bottom-color: <?php echo $col['grey']; ?>;					/* COLOR: Text GREY */
+	border-bottom-width: 1px;
+}
+
+
+
+
+
+/* Champ de texte sélectionné */
+input[type=textbox]:enabled:focus, input[type=number]:enabled:focus, input[type=password]:enabled:focus, input[type=date]:enabled:focus,
+textarea:enabled:focus, 
+select:enabled:focus{
+	background:<?php echo $col['background'][3]; ?>;
+	<?php echo $shadow['SMALL_u']; ?>;    								/* SHADOW: Small */
+	
+	
+	border-bottom-color: <?php echo $col['accent']['NORMAL']; ?>;		/* COLOR: Accent NORMAL */
+	
+	
+	
+	
+}
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+
+
+
+
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/* BOUTONS (incluant boutons reset et submit) */
+
+
+
+/* Bouton */
+button,
+input[type=reset],
+input[type=submit],
+input[type=file] {
+	margin: 0.5em;
+	
+	font-weight: bold;
+	font-size: 87.5%;
+	padding: 0.75em 1.25em;
+	
+	text-align:center;
+	text-transform: uppercase;
+	
+	border-style:none;
+	border-radius: 2px;
+}
+
+
+
+/* Bouton activé */
+button:enabled,
+input[type=reset]:enabled,
+input[type=submit]:enabled,
+input[type=file]:enabled {
+	<?php echo $shadow['SMALL']; ?>			    							/* SHADOW: Small */
+	
+	color: <?php echo $col['text']['primary']; ?>;							/* COLOR: Text PRIMARY */
+	
+	transition: box-shadow 0.05s linear,
+				background 0.05s linear;
+}
+
+
+/* Bouton activé */
+button:enabled,
+input[type=reset]:enabled,
+input[type=submit]:enabled{
+	background: <?php echo $col['accent']['NORMAL']; ?>;					/* COLOR: Accent NORMAL */
+}
+
+
+
+/* Bouton désactivé */
+button:disabled,
+input[type=reset]:disabled,
+input[type=submit]:disabled,
+input[type=file]:disabled {
+	background: <?php echo $col['grey']; ?>;								/* COLOR: Text GREY */
+	color: <?php echo $col['text']['primary_grey']; ?>;
+}
+
+
+
+/* Bouton survolé */
+button:enabled:hover,
+input[type=reset]:enabled:hover,
+input[type=submit]:enabled:hover {
+	background: <?php echo $col['accent']['BRIGHT']; ?>;                 	/* COLOR: Accent BRIGHT */
+	<?php echo $shadow['SMALL']; ?>			    							/* SHADOW: Small */
+}
+
+/* Bouton sélectionné */
+button:enabled:active,
+input[type=reset]:enabled:active,
+input[type=submit]:enabled:active {
+	background: <?php echo $col['accent']['DARK']; ?>;						/* COLOR: Accent DARK */
+	<?php echo $shadow['SMALLER']; ?>			    						/* SHADOW: Smaller */
+}
+
+
+
+
+
+input[type=file] {
+	width:calc(100% - 3.5em);
+	color: <?php echo $col['text']['main']; ?>;								/* COLOR: Text */
+}
+
+input[type=file]:enabled:active {
+	background: <?php echo $col['background'][3]; ?>;						/* COLOR: Background 3 */
+}
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+/* Checkboxes */
+
+input[type=radio] {
+	float:left;
+	
+	width:auto;
+	height:auto;
+	
+	margin-top:0.3em;
+	margin-right:1.0em;
+}
+
+
+input[type=checkbox] {
+	float:left;
+	clear:left;
+
+	width:auto;
+	height:auto;
+	
+	margin-top:0.3em;
+	margin-right:1.0em;
+	
+}
+
+/* Pour replacer correctement les label des checkbox et des radio */
+input[type=checkbox] + label, input[type=radio] + label{
+	margin-top:-0.1em;
+	margin-bottom:0.35em;
+}
+
+
+
+
+.radio-button, .checkbox{
+	display:inline-block;
+	margin-right:5em;
+}
+
+
+
+
+
+input:disabled{
+	color: <?php echo $col['text']['grey']; ?>;
+}
+
+
+
+
+
+
+
+
+
+
+
+#addContact{
+	text-indent: -9999px;	/* Paliatif pour cacher le texte (le X) qu'on veut remplacer par une image */
+	
+	background-image: url("material/svg/ic_add_circle_outline_48px.svg");
+    background-size: 75%;
+    background-position: center; 
+	background-repeat: no-repeat;
+	
+	border-radius:50%;
+	width: 40px;
+	height: 40px;
+}
+
+
+
+
+
+
+/*
+#addContact{
+    padding-bottom:1em;
+	vertical-align:center;
+	line-height:2em;
+}
+#addContact::before{
+	display: inline-block;
+	content: ' ';
+	background-image: url("material/svg/ic_add_circle_outline_48px.svg");
+	background-size: 2em;
+	height: 2em;
+	width: 2em;
+}
+
+
+
+
+/*
+#addContact::before{
+	content:'';
+	display: inline-block;
+	width:50px;
+}
+
+#addContact::after{
+	content: url("material/svg/ic_add_circle_outline_48px.svg");
+	display: inline-block;
+	position:absolute;
+	
+	width: 32px;
+	backgrond-size:32px;
+}
+*/

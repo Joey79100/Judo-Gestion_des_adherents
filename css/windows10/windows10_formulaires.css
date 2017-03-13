@@ -1,0 +1,329 @@
+/***************************************************************************************************/
+/* Fichier formulaires.php */
+/***************************************************************************************************/
+
+
+
+form{
+	padding:1em 1em;
+}
+
+fieldset{
+	padding-top:0;
+	padding-bottom:0.5em;
+	padding-left:1.5em;
+	padding-right:1.75em;
+	
+	margin-bottom:1em;
+}
+
+
+
+.form-ligne{
+	margin-top:1.5em;
+}
+
+
+.form-ligne > label, .form-ligne > input, .form-ligne > textarea, .form-ligne > select{
+	display:block;
+	width:100%;
+}
+
+
+.form-gauche,
+.form-droite{
+	display:inline-block;
+	width:48.75%;
+}
+
+.form-gauche{
+}
+.form-droite{
+	float:right;
+}
+
+
+
+/* Marge supérieure pour les lignes de texte <p> */
+fieldset p{
+	margin-top: 2em;
+}
+/* Suppression de la marge pour le premier <p> d'un fieldset*/
+fieldset p:first-of-type{
+	margin-top: 0;
+}
+
+
+
+.form-boutons{
+	width:100%;
+	padding-top:1em;
+	
+	text-align:center;
+}
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+
+
+
+
+legend{
+	margin-left:-10px;
+}
+
+
+
+label{
+	line-height:2em;
+}
+
+
+label input{
+	display:block;
+	width:100%;
+	padding:0.5em 0em;
+	
+}
+
+
+
+/* Labels qui seront écrits en plus petit au dessus des champs de texte - ne s'appliquera pas aux radio et checkbox */
+.libelle{
+	display:block;
+	margin-top:0;
+	margin-bottom:0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/* CHAMPS DE TEXTE */
+
+
+
+
+/* Champ de texte */
+input[type=textbox], input[type=number], input[type=password], textarea, select{
+	padding-top:0.1em;
+	padding-bottom:0.2em;
+	
+	padding-left:0.1em;
+	padding-right:0.1em;
+	
+	margin-bottom:1em;
+	
+	<?php echo $border['input']; ?>
+}
+
+
+input[type=textbox], input[type=number], input[type=password], textarea{
+	margin-bottom:1em;
+	min-width:49%;
+		width:100%;
+	
+}
+select{
+	min-width:32%;
+	text-align:center;
+}
+
+/* Zone de texte */
+textarea{
+	display:block;
+	resize:vertical;
+	
+	min-height:2em;
+}
+
+
+
+
+/* Champ de texte activé */
+input[type=textbox]:enabled, input[type=number]:enabled, input[type=password]:enabled,
+textarea:enabled,
+select{
+}
+
+
+
+
+/* Champ de texte survolé*/
+input[type=textbox]:enabled:hover, input[type=number]:enabled:hover, input[type=password]:enabled:hover,
+textarea:enabled:hover,
+select:enabled:hover{
+}
+
+
+
+
+
+/* Champ de texte désactivé*/
+input[type=textbox]:disabled, input[type=number]:disabled, input[type=password]:disabled,
+textarea:disabled{
+}
+
+
+
+
+
+/* Champ de texte sélectionné */
+input[type=textbox]:enabled:focus, input[type=number]:enabled:focus, input[type=password]:enabled:focus,
+textarea:enabled:focus, 
+select:enabled:focus{
+}
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+
+
+
+
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/* BOUTONS (incluant boutons reset et submit) */
+
+
+
+/* Bouton */
+button,
+input[type=reset],
+input[type=submit],
+input[type=file] {
+	margin: 0.5em;
+	padding: 0.2em 2.0em;
+	
+	text-align:center;
+	
+	
+}
+
+
+/* Bouton activé */
+button:enabled,
+input[type=reset]:enabled,
+input[type=submit]:enabled,
+input[type=file]:enabled {
+	background: <?php echo $col['background']['normal']; ?>;
+	<?php echo $border['button']['off']; ?>
+}
+
+
+/* Bouton activé */
+button:enabled,
+input[type=reset]:enabled,
+input[type=submit]:enabled{
+}
+
+
+
+/* Bouton désactivé */
+button:disabled,
+input[type=reset]:disabled,
+input[type=submit]:disabled,
+input[type=file]:disabled {
+	background: <?php echo $col['background']['normal']; ?>;
+	<?php echo $border['button']['disabled']; ?>
+	color:<?php echo $col['text']['grey']; ?>;
+}
+
+button:enabled:focus,
+input[type=reset]:enabled:focus,
+input[type=submit]:enabled:focus {
+	box-shadow: inset 0px 0px 2px 1px <?php echo $col['border']['window']['light']; ?>,
+				inset	4px 6px 8px 8px #ffffff;
+}
+
+
+
+
+/* Bouton sélectionné */
+button:enabled:active,
+input[type=reset]:enabled:active,
+input[type=submit]:enabled:active {
+	<?php echo $border['button']['on']; ?>
+}
+
+
+
+input[type=file] {
+	width:calc(100% - 3.5em);
+}
+
+input[type=file]:enabled:active {
+}
+
+
+
+
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+
+/* Checkboxes */
+
+
+input[type=radio] {
+	float:left;
+	
+	width:auto;
+	height:auto;
+	
+	margin-top:0.6em;
+	margin-right:1.0em;
+}
+
+input[type=checkbox] {
+	float:left;
+	clear:left;
+
+	width:auto;
+	height:auto;
+	
+	margin-top:0.6em;
+	margin-right:1.0em;
+	
+}
+
+
+input:disabled{
+}
+
+
+
+.radio-button, .checkbox{
+	display:inline-block;
+	margin-right:5em;
+}
+

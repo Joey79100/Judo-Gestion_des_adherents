@@ -1,0 +1,158 @@
+
+/***************************************************************************************************/
+/* Fichier menu_navigation.php */
+/***************************************************************************************************/
+
+/* Menu basé sur : https://www.creativejuiz.fr/blog/tutoriels/menu-deroulant-css3-transition-max-height */
+
+
+
+
+
+
+
+
+
+
+/* MENU ENTIER */
+#menu{
+	font-size:95%;
+}
+
+/* LIENS MENU : Faire qu'ils prennent la taille du bloc entier */
+#menu a { 
+	display:block;
+	text-decoration:none;
+	
+	text-align:center;
+	
+	line-height:<?php echo $size['height']['menu']['sous-menu']; ?>;		/* Hauteur du menu / Doit être égal à "#menu ul" -> "top" */
+}
+
+
+
+/* LIENS SOUS-MENU : Faire qu'ils prennent la taille du bloc entier */
+#menu li li a {
+	padding:0.25em 0.75em;
+	text-align:left;
+}
+
+
+
+
+/* ELEMENTS (menu & sous-menus) */
+#menu > li,
+#menu > li li {
+	position: relative;
+	display:inline-block;
+	min-width: 225px;					/* Largeur des éléments du menu ET des sous-menus */
+	
+	color: <?php echo $col['text']['primary']; ?>;
+	
+	transition: background 0.15s linear;
+}
+
+
+#menu > li li {
+	font-size:85%;
+	text-align:left;
+}
+
+
+
+
+
+#menu > li:hover,
+#menu > li li:hover {
+	background: <?php echo $col['primary']['BRIGHT']; ?>;
+}
+
+
+
+
+/* (presque) fin de la partie positionnement/déco */
+/* dans cette déclaration, on fixe le max-height */
+#menu ul {
+	position: absolute;
+	margin: 0; padding: 0;
+	top: <?php echo $size['height']['menu']['sous-menu']; ?>;			/* Origine verticale du sous-menu / Doit être égal à menu "#menu a" -> "line-height" */
+	
+	/* left:0; */
+	
+	opacity:0;
+	
+	max-height:0;
+	background-color: <?php echo $col['primary']['NORMAL']; ?>;
+	overflow: hidden;
+	transition: max-height 0.3s ease,
+				opacity 0.1s linear;
+	
+	<?php echo $shadow['NORMAL']; ?>;    					/* SHADOW: Big */
+}
+
+/* ici on change la valeur de max-height au :hover */
+
+#menu > li:hover ul, #menu > li:active ul {
+	/* 
+	 * max-height : Hauteur maximal du menu. Doit être supérieur au nombre d'éléments fois la hauteur d'un élément.
+	 * Un élément vaut 2.75em.
+	 */
+	max-height: calc(<?php echo $size['height']['menu']['sous-menu']; ?> * (<?php echo $size['height']['nombre_elements']; ?> + 0.5));
+	opacity:1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* BANDEAU NAVIGATION -> LISTE -> ELEMENT :: Bordure */
+#menu li:after {
+  position: absolute;
+  left: 50%;
+  content: '';
+  width: 0;
+  bottom: 0;
+  
+  height: <?php echo $border['size']; ?>;
+  transition: all 0.25s ease-out;
+}
+
+
+
+
+/* BANDEAU NAVIGATION -> LISTE -> ELEMENT : survol */
+#menu li:hover{
+	background: <?php echo $col['primary']['BRIGHT']; ?>;
+	z-index:99;
+}
+
+/* BANDEAU NAVIGATION -> LISTE -> ELEMENT : survol :: Bordure */
+#menu li:hover:after {			
+	width: 100%;
+	background: white;
+	left: 0px;
+}
+
+
+
+
+
+
+
+
+/* Séparateur dans les menus */
+#menu hr{
+	margin:0;
+}
+
+
+
+
+

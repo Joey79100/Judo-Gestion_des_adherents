@@ -1,0 +1,23 @@
+/***************************************************************************************************/
+/* Fichier judo tableaux adherents.php */
+/***************************************************************************************************/
+
+
+/* TABLEAUX, LIGNES ET CELLULES */
+
+.tableau-boutons{
+	width:100%;
+	margin-top:1.5em;
+}
+.tableau-bouton-gauche, .tableau-bouton-droite{
+	display:inline-block;
+	width:49.75%;
+}
+
+.tableau-bouton-gauche{
+	text-align:left;
+}
+
+.tableau-bouton-droite{
+	text-align:right;
+}

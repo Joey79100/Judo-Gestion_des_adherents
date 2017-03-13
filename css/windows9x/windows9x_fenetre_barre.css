@@ -1,0 +1,26 @@
+
+/***************************************************************************************************/
+/* Fichier fenetre barre.php */
+/***************************************************************************************************/
+
+
+
+/* TITRES */
+h1{
+	width:calc(100% + 2.35em);
+	margin:-1.45em;
+	margin-bottom:1.5em;
+	
+	padding:2px 3px;
+	
+	background: <?php echo $col['window']['active']; ?>;
+	color: <?php echo $col['text']['white']; ?>;
+}
+
+
+
+h1{
+	display:block;
+	font-size:inherit;
+	font-weight: bold;
+}

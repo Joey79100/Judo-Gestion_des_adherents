@@ -1,0 +1,11 @@
+
+
+.detail-erreur td{
+	font-weight:normal;
+}
+
+.detail-erreur td:first-of-type{
+	text-align:center;
+	color:<?php echo $col['text']['grey']; ?>;
+	width:15%;
+}

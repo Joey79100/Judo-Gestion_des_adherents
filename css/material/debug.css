@@ -1,0 +1,32 @@
+.debug, .debug *{
+	background: lightgrey;
+	color: black;
+	
+	font-size: 10px;
+	font-family: "Consolas";
+	
+	padding:3px;
+}
+
+
+
+
+.xdebug{
+	border-collapse:collapse;
+}
+.xdebug th{
+	background: <?php echo $col['background'][4]; ?>;
+}
+
+.xdebug td{
+	font-size:12px;
+	background: <?php echo $col['background'][4]; ?>;
+}
+
+.xdebug th>span{
+	/* Paliatif pour forcer le rouge dégueulasse du point d'interrogation à disparaître */
+	background-image:linear-gradient(to top, <?php echo $col['background'][4]; ?>, <?php echo $col['background'][4]; ?>);
+	
+	text-shadow: 1px 1px 2px #000000;
+	margin-right:0.5em;
+}

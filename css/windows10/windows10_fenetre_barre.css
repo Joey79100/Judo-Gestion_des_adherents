@@ -1,0 +1,38 @@
+
+/***************************************************************************************************/
+/* Fichier fenetre barre.php */
+/***************************************************************************************************/
+
+
+
+/* TITRES */
+h1{
+	width:calc(100% + 2.45em);
+
+	
+	margin-top:-1.6em;
+	margin-bottom:1.6em;
+	
+	margin-left:-1.4em;
+	margin-right:-1.4em;
+	
+	
+	height:calc(30px - 7px);
+	
+	padding-top: 7px;
+	padding-left: 5px;
+	
+	
+	background: <?php echo $col['window']['active']; ?>;
+	color: <?php echo $col['title']['active']; ?>;
+	
+	
+    text-shadow: 1px 1px <?php echo $col['shadow']['title']; ?>;
+	
+	
+	display:block;
+	font-family: <?php echo $font['family']['title']; ?>;
+	font-size: <?php echo $font['size']['title']; ?>;
+	font-weight: bold;
+	border-radius: 8px 8px 0px 0px;
+}

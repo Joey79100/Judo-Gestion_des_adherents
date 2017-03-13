@@ -1,0 +1,47 @@
+/***************************************************************************************************/
+/* Fichier tableaux.php */
+/***************************************************************************************************/
+
+
+/* TABLEAUX, LIGNES ET CELLULES */
+
+
+table{
+	width:100%;
+	font-size:105%;
+	
+	border-collapse:collapse;
+	
+	background:<?php echo $col['background']['white']; ?>;
+}
+
+
+
+
+th, td{
+	
+}
+
+
+
+
+th{
+	
+	line-height:1.6em;
+	font-weight:normal;
+	
+	
+	background:<?php echo $col['background']['normal']; ?>;
+	<?php echo $border['th']; ?>
+}
+
+
+
+td{
+	line-height:1.7em;	
+	padding: 0 1em;
+}
+
+
+
+
