@@ -22,7 +22,7 @@
 	
 	
 	$nbCours = 0;
-	$i = 0;
+	$i = 1;
 	$tailleTab = count($this->viewvar['suivre']);
 	
 	
@@ -121,7 +121,43 @@
 						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_date_naissance'] . " </td>
 						<td> " . "42" . " </td>
 						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_genre'] . " </td>
-						<td> " . "Rose" . " </td>
+						<td> ";
+				
+				
+				
+				
+				/*
+				 * Récupération de la ceinture... Un peu compliqué...
+				 * On a récupéré les passages de ceinture. Donc on parcourt cette liste, et le premier
+				 */
+				
+				
+				
+				$ceintureTrouvee = false;
+				
+				$j = 0;
+				$tailleListePassagesCeintures = count($this->viewvar['passer']);
+				
+				while($j < $tailleListePassagesCeintures && !$ceintureTrouvee){
+					if($this->viewvar['passer'][$j]['pas_adherent'] == $this->viewvar['suivre'][$i]['sui_adherent']['adh_id']){
+						echo $this->viewvar['passer'][$j]['pas_ceinture']['cei_libelle'];
+						$ceintureTrouvee = true;
+					}
+					
+					if(!$ceintureTrouvee){
+						echo "N/A";
+					}
+					
+					$j++;
+				}
+				
+				
+				
+				
+				
+				
+				
+				echo	" </td>
 						<td> " .
 						
 						($this->viewvar['suivre'][$i]['sui_adherent']['adh_certificat_medical'] ?
@@ -149,6 +185,7 @@
 				
 				$cours = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
 				// echo '<br/>Le cours ' . $cours;
+				
 				
 				$i++;		// Affichage de l'élément terminé : lecture du prochain adhérent
 			}

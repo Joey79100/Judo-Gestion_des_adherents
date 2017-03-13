@@ -230,9 +230,9 @@
 					}
 					
 	echo "		/>
-					
+				
 				</div>
-					
+				
 				
 			
 		
@@ -245,7 +245,7 @@
 					<select name='position' id='position' class='largeur-100'>";
 					
 					foreach($this->viewvar['position'] as $position){
-						echo "<option value='" . $position['pos_id'] . "' ";
+						echo "<option value='{" . $position['pos_id'] . "' ";
 						
 						if($modif && $position['pos_id'] == $this->viewvar['adherent']['adh_position']){
 							echo "selected";
@@ -283,7 +283,7 @@
 				
 					
 				<div class='form-tiers-3'>
-					<label for='cours' class='libelle'>Ceinture</label>" . $this->viewvar['passer']['pas_ceinture'] . "
+					<label for='cours' class='libelle'>Ceinture</label>
 					<select name='ceinture' id='ceinture' class='largeur-100'>";
 					
 						foreach($this->viewvar['ceinture'] as $ceinture){

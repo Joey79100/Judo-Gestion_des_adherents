@@ -12,9 +12,13 @@
 		
 		
 		
+		
+		
 		public function index(){
 			$this->render("index");
 		}
+		
+		
 		
 		
 		
@@ -35,6 +39,8 @@
 			
 			$this->render("ajout_modif");
 		}
+		
+		
 		
 		
 		
@@ -202,6 +208,8 @@
 		
 		
 		
+		
+		
 		/*
 		 * modifier()			Affiche la page d'ajout/modification pré-remplie pour l'adhérent demandé
 		 *						Page chargée automatiquement lors de la sélection de l'un des membres listés dans la liste
@@ -211,98 +219,29 @@
 		 * @param $adh_id		l'ID de l'adhérent à modifier - si non précisé, redirection vers la page d'ajout
 		 */
 		public function modifier($adh_id = null){
-			if($adh_id == ''){
+			if(!is_numeric($adh_id)){
+				// Si on n'a pas un numéro dans l'URL on redirige vers Ajouter
 				header("Location: " . ADHERENT . "ajouter");
 			}else{
-				$this->adherent->setAdh_id($adh_id);
-				
-				// $this->set(array('lien_parente' => $this->lien_parente->find()));
-				// $this->set(array('type_contact' => $this->type_contact->find()));
-				// $this->set(array('position' => $this->position->find()));
-				// $this->set(array('cours' => $this->cours->find()));
-				// $this->set(array('ceinture' => $this->ceinture->find()));
-				
-				// $this->set(array('adherent' => $this->adherent->read(null, 2)));
-				
-				// $this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
-				
 				$saison_id = $this->saison->find("sai_debut = " . $_SESSION['saison']['debut']. " AND sai_fin = " . $_SESSION['saison']['fin'])[0]['sai_id'];
-				// $this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id)[0]));
 				
+				$this->set(array('lien_parente' => $this->lien_parente->find()));
+				$this->set(array('type_contact' => $this->type_contact->find()));
+				$this->set(array('position' => $this->position->find()));
+				$this->set(array('cours' => $this->cours->find()));
+				$this->set(array('ceinture' => $this->ceinture->find()));
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				// $this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1)[0]));
-				echo "<hr/><hr/><hr/><hr/><hr/><hr/>";
-				
-				
-				
-				
-				
-				
-				$condition = "pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id;
-				
-				
-				
-				$passer = $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id);
-				echo "PASSER : <br/>";
-				var_dump($passer);
-				
-				
-				
-				
-				die();
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				echo "<hr/><hr/><hr/><hr/><hr/><hr/>";
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id)));
-				
-				
-				echo "<div class='debug'><pre>";
-				echo "<b>ID ADHERENT : " . $this->adherent->getAdh_id() . "</b><br/>";
-				print_r($this->viewvar);
-				echo "</pre></div>";
+				$this->adherent->setAdh_id($adh_id);
+				$this->set(array('adherent' => $this->adherent->read(null, 2)));
+				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
+				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id)[0]));
+				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1)[0]));
 				
 				$this->render("ajout_modif");
 			}
 		}
+		
+		
 		
 		
 		
@@ -333,6 +272,8 @@
 			
 			$this->adherent->setAdh_ville($_POST['ville']);
 		}
+		
+		
 		
 		
 		
@@ -368,6 +309,7 @@
 			
 			
 			$nbmax = null;
+			// $nbmax = 15;
 			if($nbmax != null){
 				echo "<div class='debug'> NOTE : Seulement " . $nbmax . " enregistrements ont été chargés. </div>";
 			}
@@ -379,6 +321,18 @@
 		
 			
 			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, $clesOmises, 2)));
+			
+			foreach($this->viewvar['suivre'] as $uneLigne){
+				// Chargement de tous les passages de ceinture
+				$this->set(array('passer' => $this->passer->find('pas_saison = ' . $saisonId . ' AND pas_adherent = ' . $uneLigne['sui_adherent']['adh_id'], 'pas_date DESC', null, array('saison', 'adherent'), 1)));
+			}
+			
+			echo "<div class='debug'><pre>";
+			print_r($this->viewvar);
+			echo "</pre></div>";
+			
+			// die();
+			
 			$this->render("liste_par_cours");
 		}
 	}

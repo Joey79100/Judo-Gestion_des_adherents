@@ -211,10 +211,8 @@ abstract class Model{
 					$listeValeurs .= $uneValeurColonne ? " TRUE ," : " FALSE ,";
 				}else{
 					echo "<hr/>";
-					// var_dump($uneValeurColonne);
 					
-					$uneValeurColonne = htmlspecialchars($uneValeurColonne, ENT_QUOTES);
-					$listeValeurs .= " '" . $uneValeurColonne . "' ,";
+					$listeValeurs .= " '" . htmlspecialchars($uneValeurColonne, ENT_QUOTES) . "' ,";
 				}
 			}
 		}
@@ -254,70 +252,50 @@ abstract class Model{
 	
 	
 	private function ecrireRequeteRead($id){
-		// echo "<br/>ENTREE DANS model::ecrireRequeteRead()";
+		// echo "<hr/><b><font color='blue'>ENTREE DANS model::ecrireRequeteRead()</font></b><br/>";
 		
-		// echo "<br/> model::ecrireRequeteRead() -> \$id : <br/><pre>";
+		// echo "<br/> <u>model::ecrireRequeteRead() -> \$id :</u> <br/>";
+		// echo "<pre>";
 		// print_r($id);
 		// echo "</pre>";
+		// var_dump($id);
 		
-		// echo "<br/> model::ecrireRequeteRead() -> \$this->pk : <br/><pre>";
+		// echo "<br/> <u>model::ecrireRequeteRead() -> \$this->pk :</u> <br/>";
+		// echo "<pre>";
 		// print_r($this->pk);
 		// echo "</pre>";
+		// var_dump($this->pk);
+		
 		
 		$req = "SELECT * FROM {$this->table} WHERE ";
 		
-			if(is_array($this->pk)){								// Cas d'une clé primaire composée
-				$taille = count($this->pk);
+		
+		if(is_array($this->pk)){								// Cas d'une clé primaire composée
+		
+			if(is_array($id)){
 				
+				foreach($this->pk as $uneClePrimaire){
+					$req = $req . $uneClePrimaire . " = " . $id[$uneClePrimaire] . " AND ";
+				}
+				$req = substr($req, 0, -4); // Pour enlever le denier 'AND' inutile de la requête
 				
-				if(is_array($id)){
-					if($taille == count($this->pk)){			//  /!\  PROBLEME ICI (voir commentaire en fin de fonction)
-						for($i = 0; $i < $taille ; $i++){
-							
-							$req = $req . $this->pk[$i] . " = " . $id[$i];
-							if($i < $taille - 1){					// Ajouter AND s'il reste encore au moins une clé
-								$req = $req . " AND ";
-							}
-						}
-					}else{
-						die("<br/><font color='darkred'>model::ecrireRequeteRead -> ERREUR : la taille du tableau clé primaire fourni est différent de la taille du tableau clé primaire de l'objet.</font><br/>");
-					}
-				}else{
-					die("<br/><font color='darkred'>model::ecrireRequeteRead -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
-				}
-			}else{													// Cas d'une clé primaire classique
-				if(is_array($id)){
-					$req = $req . $this->pk . " = " . $id[0];
-				}else{
-					$req = $req . $this->pk . " = " . $id;
-				}
+			}else{
+				die("<br/><font color='darkred'>model::ecrireRequeteRead -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
 			}
-			
-			// echo "<br/><b>model::ecrireRequeteRead() -> \$req :</b> " . $req . "<br/>";
+		}else{													// Cas d'une clé primaire classique
+			if(is_array($id)){
+				$req = $req . $this->pk . " = " . $id[0];
+			}else{
+				$req = $req . $this->pk . " = " . $id;
+			}
+		}
+		
+		// echo "<br/><b>model::ecrireRequeteRead() -> \$req :</b> " . $req . "<br/>";
 		
 		
-		// echo "<br/>SORTIE DE model::ecrireRequeteRead()";
+		// echo "<br/><b><font color='blue'>SORTIE DE model::ecrireRequeteRead()</font></b><hr/>";
 		return $req;
-		
-		
-		
-		/*
-		 * -------------------- PROBLEME dans la FACON D'ECRIRE LA REQUETE dans le CAS D'UNE CLE PRIMAIRE COMPOSEE --------------------
-		 * 
-		 * Dans le cas d'une table avec clé primaire composée ET propriétés supplémentaires, il sera impossible d'écrire la requête à
-		 * cause de la façon dont on "détecte" la clé primaire dans le résultat qui est passé en paramètre.
-		 *  
-		 * RAISON : Actuellement, on part du principe que la table à la clé primaire composée n'a pas de propriété autres que la clé
-		 * primaire. Donc on regarde si le paramètre fait la même taille que la clé primaire d'objet courant : si c'est le cas on
-		 * écrit la requête.
-		 * 
-		 * OR : Si la table contient des propriétés supplémentaires EN PLUS des propriétés de la clé primaire, alors le paramètre aura
-		 * également la clé primaire + ces autres propriétés.
-		 * Donc dans la 3e boucle IF, où on regarde si le paramètre et la clé primaire de l'objet font la même taille, il nous sera
-		 * retourné FAUX (et un message d'erreur disant qu'on a pas les même tailles, ce qui est logique du coup).
-		 */
 	}
-	
 	
 	
 	
@@ -345,14 +323,11 @@ abstract class Model{
 		
 		
 		
-		// echo "<font color='red'>Requete (lineExist())</font><br/>";
 		$db = $this->connexion();
 		$tableau = $db->query($requete);
-		// $tableau->execute();
 		$ligne = $tableau->fetch(PDO::FETCH_ASSOC);
 		$tableau->closeCursor();
 		$db = null;
-		// $row = $tableau->fetch();
 		
 		
 		/*
@@ -360,18 +335,8 @@ abstract class Model{
 		 * Si la ligne existe, alors on retourne directement la ligne récupérée pour pas refaire un autre read identique dans read().
 		 * Sinon on retourne simplement false.
 		 */
-			
-		// if($row['0'] > 0){
-			// $ligne = $row;
-		// }else{
-			// $ligne = false;
-		// }
 		
 		
-			
-			
-		
-		// echo "<br/>SORTIE DE model::lineExist()";
 		return($ligne);
 	}
 	
@@ -517,7 +482,7 @@ abstract class Model{
 		}
 		
 		
-		// echo "<hr/>model::find() -> \$requete : " . $requete . "<br/>";
+		// echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
 		
 		
 		
