@@ -14,7 +14,7 @@ class passer extends model{
 	/********************************************************/
 	
 	public function __construct($pas_saison = null, $pas_adherent = null, $pas_ceinture = null, $pas_date = null){
-		parent::__construct('passer', 'pas_saison', false, array('saison'=>'pas_saison', 'adherent'=>'pas_adherent', 'ceinture'=>'pas_ceinture'));
+		parent::__construct('passer', array('pas_saison', 'pas_adherent', 'pas_ceinture'), false, array('saison'=>'pas_saison', 'adherent'=>'pas_adherent', 'ceinture'=>'pas_ceinture'));
 		$this->pas_saison = $pas_saison;
 		$this->pas_adherent = $pas_adherent;
 		$this->pas_ceinture = $pas_ceinture;

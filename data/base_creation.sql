@@ -174,7 +174,7 @@ CREATE TABLE inscrire(
  *				COURS
  */
 CREATE TABLE suivre(
-	sui_saison							SERIAL,
+	sui_saison							int,
 	sui_adherent						int,
 	sui_cours							int,
 	CONSTRAINT pk_suivre				PRIMARY KEY (sui_saison, sui_adherent, sui_cours),
@@ -196,7 +196,7 @@ CREATE TABLE suivre(
  *				CEINTURE
  */
 CREATE TABLE passer(
-	pas_saison							SERIAL,
+	pas_saison							int,
 	pas_adherent						int,
 	pas_ceinture						int,
 	pas_date							date,
