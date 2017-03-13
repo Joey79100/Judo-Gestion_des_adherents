@@ -7,11 +7,11 @@ contactsASupprimer = "";
 
 
 /*
- * supprimerContact()		Supprime la ligne correspondant à un contact.
- *							Si l'ID du contact est fourni, alors c'est que l'on est sur une page de modification des informations d'un
- *							adhérent, et donc que le contact supprimé devra également être supprimé de la base. L'ID de chaque contact
- *							supprimé sera donc enregistré dans une variable globale sous forme d'une liste d'IDs séparés par une virgule
- *							afin d'indiquer au script PHP quels contacts doivent être supprimés.
+ * supprimerContact - Supprime la ligne correspondant à un contact.
+ *		Si l'ID du contact est fourni, alors c'est que l'on est sur une page de modification des informations d'un
+ *		adhérent, et donc que le contact supprimé devra également être supprimé de la base. L'ID de chaque contact
+ *		supprimé sera donc enregistré dans une variable globale sous forme d'une liste d'IDs séparés par une virgule
+ *		afin d'indiquer au script PHP quels contacts doivent être supprimés.
  *
  * @param elementASupprimer	ID de la div à supprimer.
  */
@@ -45,8 +45,8 @@ function retirerContact(elementASupprimer, id = null){
 
 
 /*
- * ajouterContact()			Ajoute une ligne dans le formulaire (dans la div #lesContacts) pour entrer les informations d'un contact
- *							(lien de parenté, type de contact, et l'information contact elle-même)
+ * ajouterContact - Ajoute une ligne dans le formulaire (dans la div #lesContacts) pour entrer les informations d'un contact
+ *		(lien de parenté, type de contact, et l'information contact elle-même)
  *
  * @param contact			Tableau d'informations pré-remplies pour la ligne
  *							Si non fourni, on est sur une page d'ajout de nouvel adhérent, les champs créés seront donc vides.
