@@ -367,7 +367,6 @@
 			// Récupération des adhérents ordonnés par cours pour la saison choisie
 			
 			
-			// $nbmax = 3;
 			$nbmax = null;
 			if($nbmax != null){
 				echo "<div class='debug'> NOTE : Seulement " . $nbmax . " enregistrements ont été chargés. </div>";
@@ -379,7 +378,7 @@
 			
 		
 			
-			$this->set(array('inscription' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, $clesOmises, 2)));
+			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, $clesOmises, 2)));
 			$this->render("liste_par_cours");
 		}
 	}

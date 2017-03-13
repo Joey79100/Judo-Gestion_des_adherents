@@ -2,9 +2,9 @@
 	$debug = true;		// Affiche une colonne supplémentaires avec les données brutes de la base
 	
 	
-	// echo "<div class='window' style='background:#ccf;'><h1>\$this->viewvar['inscription']</h1>";
+	// echo "<div class='window' style='background:#ccf;'><h1>\$this->viewvar['suivre']</h1>";
 	// echo "<pre> ";
-	// print_r($this->viewvar['inscription']);
+	// print_r($this->viewvar['suivre']);
 	// echo "</pre>";
 	// echo "</div>";
 	
@@ -15,7 +15,7 @@
 	
 	
 	// echo "<div class='debug'><pre>";
-	// print_r($this->viewvar['inscription']);
+	// print_r($this->viewvar['suivre']);
 	// echo "</pre></div>";
 	
 	
@@ -23,7 +23,7 @@
 	
 	$nbCours = 0;
 	$i = 0;
-	$tailleTab = count($this->viewvar['inscription']);
+	$tailleTab = count($this->viewvar['suivre']);
 	
 	
 	
@@ -71,14 +71,14 @@
 	
 	while($i < $tailleTab){
 		
-		$cours_old = $this->viewvar['inscription'][$i]['sui_cours']['cou_id'];
-		$cours     = $this->viewvar['inscription'][$i]['sui_cours']['cou_id'];
+		$cours_old = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
+		$cours     = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
 			
 		$nbCours++;
 		
 		echo "<div class='window'>
 			<span>
-				<h1 class='div_cours_titre' id='div_cours_titre_" . $nbCours . "'>" . $this->viewvar['inscription'][$i]['sui_cours']['cou_libelle'] . "</h1>
+				<h1 class='div_cours_titre' id='div_cours_titre_" . $nbCours . "'>" . $this->viewvar['suivre'][$i]['sui_cours']['cou_libelle'] . "</h1>
 				<button type='button' id='div_cours_" . $nbCours . "_button' class='boutonOuvertureCours'>-</button>
 			</span>
 			
@@ -99,49 +99,47 @@
 						<th> Ceinture </th>
 						<th> CM </th>
 						<th> Licence </th>";
+						
 						if($debug){
 							echo "<th> SAI, ADH, COU </th>";
 						}
+						
 					echo "</tr>
 				";
 			
 			while($i < $tailleTab && $cours_old == $cours){
 				echo "
 					<tr>
-						<td> " . strtoupper($this->viewvar['inscription'][$i]['sui_adherent']['adh_famille']['fam_libelle']) . " </td>
+						<td> " . strtoupper($this->viewvar['suivre'][$i]['sui_adherent']['adh_famille']['fam_libelle']) . " </td>
 						<td> " . "T" . " </td>
 						<td> " . "05.04.03.02.01" . " </td>
-						<td> " . $this->viewvar['inscription'][$i]['sui_adherent']['adh_adresse_postale'] . " "
-							   . $this->viewvar['inscription'][$i]['sui_adherent']['adh_code_postal'] . " " .  $this->viewvar['inscription'][$i]['sui_adherent']['adh_ville'] . " </td>
-						<td> " . $this->viewvar['inscription'][$i]['sui_adherent']['adh_nom'] . " </td>
-						<td> " . $this->viewvar['inscription'][$i]['sui_adherent']['adh_prenom'] . " </td>
-						<td> " . ucfirst($this->viewvar['inscription'][$i]['sui_adherent']['adh_position']['pos_libelle']) . " </td>
-						<td> " . $this->viewvar['inscription'][$i]['sui_adherent']['adh_date_naissance'] . " </td>
+						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_adresse_postale'] . " "
+							   . $this->viewvar['suivre'][$i]['sui_adherent']['adh_code_postal'] . " " .  $this->viewvar['suivre'][$i]['sui_adherent']['adh_ville'] . " </td>
+						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_nom'] . " </td>
+						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_prenom'] . " </td>
+						<td> " . ucfirst($this->viewvar['suivre'][$i]['sui_adherent']['adh_position']['pos_libelle']) . " </td>
+						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_date_naissance'] . " </td>
 						<td> " . "42" . " </td>
-						<td> " . $this->viewvar['inscription'][$i]['sui_adherent']['adh_genre'] . " </td>
+						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_genre'] . " </td>
 						<td> " . "Rose" . " </td>
-						<td> ";
+						<td> " .
 						
-						if($this->viewvar['inscription'][$i]['sui_adherent']['adh_certificat_medical']){
-							echo "Oui";
-						}else{
-							echo "Non";
-						}
-						echo "</td>	<td>";
-						if($this->viewvar['inscription'][$i]['sui_adherent']['adh_licence']){
-							echo $this->viewvar['inscription'][$i]['sui_adherent']['adh_licence_numero'];
-						}else{
-							echo "N/A";
-						}
-						echo "
-						</td>";
+						($this->viewvar['suivre'][$i]['sui_adherent']['adh_certificat_medical'] ?
+							"Oui" : "Non") . " </td>
+						
+						<td> " .
+						
+						($this->viewvar['suivre'][$i]['sui_adherent']['adh_licence'] ?
+							$this->viewvar['suivre'][$i]['sui_adherent']['adh_licence_numero'] : "N/A") .
+							
+						" </td>";
 						
 						if($debug){
 							echo
 							"<td> "
-							. $this->viewvar['inscription'][$i]['sui_saison'] . ", "
-							. $this->viewvar['inscription'][$i]['sui_adherent']['adh_id'] . ", "
-							. $this->viewvar['inscription'][$i]['sui_cours']['cou_id'] . "
+							. $this->viewvar['suivre'][$i]['sui_saison'] . ", "
+							. $this->viewvar['suivre'][$i]['sui_adherent']['adh_id'] . ", "
+							. $this->viewvar['suivre'][$i]['sui_cours']['cou_id'] . "
 							</td>";
 						}
 						
@@ -149,7 +147,7 @@
 					</tr>
 				";
 				
-				$cours = $this->viewvar['inscription'][$i]['sui_cours']['cou_id'];
+				$cours = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
 				// echo '<br/>Le cours ' . $cours;
 				
 				$i++;		// Affichage de l'élément terminé : lecture du prochain adhérent
@@ -189,11 +187,11 @@
 
 <?php
 	echo "
-	<div class='window'>
-		<h1>Statistiques</h1>
-		Nombre de cours : " . $nbCours . "<br/>
-		Nombre d'adhérents : " . $i . "<br/>
-	</div>
+		<div class='window'>
+			<h1>Statistiques</h1>
+			Nombre de cours : " . $nbCours . "<br/>
+			Nombre d'adhérents : " . $i . "<br/>
+		</div>
 	";
 	
 	
@@ -212,29 +210,10 @@
 	
 	
 	
-	
-	// Resource jQuery
-	echo "	<script src='https://code.jquery.com/jquery-1.12.4.js'></script>";
-	echo "	<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>";
-	
-	
+		
 	// Ouverture / Fermeture de chaque cours
 	echo "	<script src= '" . JS . "adherent/liste_par_cours/affichage_cours.js'></script>";
 	
-	
-	// echo "
-		// <script>
-			// $('#div_cours_titre_1').click(function(){
-				// if($(this).html() == '-'){
-					// $(this).html('+');
-				// }
-				// else{
-					// $(this).html('-');
-				// }
-				// $('#div_cours_1').slideToggle();
-			// });
-		// </script>
-		// ";
 		
 		
 ?>

@@ -12,29 +12,15 @@
 		
 		
 		public function index(){
-			// echo "<div class='debug'>";
-			
+			// Recherche des saisons disponibles pour affichage dans le menu
 			$this->set(array('saisons' => $this->saison->find()));
-			
-			
 			
 			if(isset($_POST['saison'])){
 				$saisonChoisie = $this->saison->find('sai_id = ' . $_POST['saison']);
 				
 				$_SESSION['saison']['debut'] = $saisonChoisie[0]['sai_debut']; 
 				$_SESSION['saison']['fin'] = $saisonChoisie[0]['sai_fin'];
-				
-				// echo "<pre>c_accueil : <br/> <br/>\$_SESSION ";
-				// print_r($_SESSION);
-				// echo "</pre>";
-				
-				// echo "<br/>Saison choisie : " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'];
 			}
-			
-			
-			
-			
-			// echo "</div>";
 			
 			$this->render("index");
 		}

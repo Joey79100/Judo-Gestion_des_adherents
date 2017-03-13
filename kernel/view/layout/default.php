@@ -3,7 +3,11 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="<?php echo CSS . "themes.php"; ?>">
 		<meta charset="utf-8">
+		
 		<script src="<?php echo JS . 'functions.js'; ?>"></script>
+		<script src='https://code.jquery.com/jquery-1.12.4.js'></script>";
+		<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>";
+		
 		<title> <?php echo APPNAME; ?> </title>
 		
 	</head>

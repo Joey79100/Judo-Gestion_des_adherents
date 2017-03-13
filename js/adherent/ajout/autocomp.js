@@ -48,18 +48,6 @@ $(
 		);
 		
 		
-		
-		
-		
-		
-		// Autocomplétion pour les champs .type_contact
-		$( '.type_contact' ).autocomplete(
-			{
-				source: TYPES_CONTACT
-			}
-		);
-		
-		
 	}
 );
 
