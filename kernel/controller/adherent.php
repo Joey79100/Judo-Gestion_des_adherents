@@ -80,7 +80,7 @@
 			
 			echo "<br/><b>c_adherent::create() -> \$this->adherent : </b>";
 			var_dump($this->adherent);
-			die();
+			// die();
 			
 			/***************************************************************************************************/
 			
@@ -141,7 +141,9 @@
 					// Chercher dans la base le lien de parenté indiqué
 					
 					$lienParente_form = strtolower($_POST['lien_contact_' . $int]);
-					if($lienParente_base = $this->lien_parente->find("lie_libelle = '" . $lienParente_form . "' ")[0]){
+					$lienParente_base = $this->lien_parente->find("lie_libelle = '" . $lienParente_form . "' ")[0] ?? null;
+					
+					if($lienParente_base){
 						// S'il existe on récupère son ID
 						$this->contact->setCon_lien_parente($lienParente_base['lie_id']);
 					}else{
@@ -268,8 +270,6 @@
 			$this->adherent->setAdh_adresse_postale($_POST['adresse']);
 			$this->adherent->setAdh_adresse_complement($_POST['adresse2'] ?: null);
 			$this->adherent->setAdh_code_postal($_POST['code_postal']);
-			$this->adherent->setAdh_ville($_POST['ville']);
-			
 			$this->adherent->setAdh_ville($_POST['ville']);
 		}
 		

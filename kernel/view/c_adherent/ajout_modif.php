@@ -245,7 +245,7 @@
 					<select name='position' id='position' class='largeur-100'>";
 					
 					foreach($this->viewvar['position'] as $position){
-						echo "<option value='{" . $position['pos_id'] . "' ";
+						echo "<option value='" . $position['pos_id'] . "' ";
 						
 						if($modif && $position['pos_id'] == $this->viewvar['adherent']['adh_position']){
 							echo "selected";

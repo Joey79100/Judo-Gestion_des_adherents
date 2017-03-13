@@ -22,7 +22,7 @@
 	
 	
 	$nbCours = 0;
-	$i = 1;
+	$i = 0;
 	$tailleTab = count($this->viewvar['suivre']);
 	
 	
