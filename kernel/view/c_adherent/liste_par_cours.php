@@ -122,40 +122,9 @@
 						<td> " . "42" . " </td>
 						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_genre'] . " </td>
 						<td> ";
-				
-				
-				
-				
-				/*
-				 * Récupération de la ceinture... Un peu compliqué...
-				 * On a récupéré les passages de ceinture. Donc on parcourt cette liste, et le premier
-				 */
-				
-				
-				
-				$ceintureTrouvee = false;
-				
-				$j = 0;
-				$tailleListePassagesCeintures = count($this->viewvar['passer']);
-				
-				while($j < $tailleListePassagesCeintures && !$ceintureTrouvee){
-					if($this->viewvar['passer'][$j]['pas_adherent'] == $this->viewvar['suivre'][$i]['sui_adherent']['adh_id']){
-						echo $this->viewvar['passer'][$j]['pas_ceinture']['cei_libelle'];
-						$ceintureTrouvee = true;
-					}
-					
-					if(!$ceintureTrouvee){
-						echo "N/A";
-					}
-					
-					$j++;
-				}
-				
-				
-				
-				
-				
-				
+
+				$idAdherent = $this->viewvar['suivre'][$i]['sui_adherent']['adh_id'];
+				echo ucfirst(($this->viewvar['ceinture_adherent'][$idAdherent]['cei_libelle'] ?? "N/A"));		// Afficher la ceinture s'il y a, sinon 'N/A'
 				
 				echo	" </td>
 						<td> " .

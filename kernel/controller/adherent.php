@@ -315,21 +315,42 @@
 			}
 			
 			
-			$clesOmises = array('saison');		// On n'a pas besoin d'afficher la saison
+			
+			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, array('saison'), 2)));
 			
 			
-		
 			
-			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, $clesOmises, 2)));
+			
+			/*
+			 * Récupération de tous les passages de ceintures (afin de déterminer quelle ceinture porte actuellement chacun des adhérents)
+			 * Quand il y a plusieurs ceintures pour le même adhérent, seul le dernier passage est retenu (pour la saison demandée en tous cas).
+			 *
+			 * Pour chaque adhérent (récupérés via leur inscription dans un cours puisqu'on les affiche classés par cours), on récupère la ceinture qui va bien.
+			 */
 			
 			foreach($this->viewvar['suivre'] as $uneLigne){
-				// Chargement de tous les passages de ceinture
-				$this->set(array('passer' => $this->passer->find('pas_saison = ' . $saisonId . ' AND pas_adherent = ' . $uneLigne['sui_adherent']['adh_id'], 'pas_date DESC', null, array('saison', 'adherent'), 1)));
+				// Recherche du dernier passage de ceinture en date l'adhérent
+				$uneLigne = $this->passer->find('pas_saison = ' . $saisonId . ' AND pas_adherent = ' . $uneLigne['sui_adherent']['adh_id'], 'pas_date DESC', 1, array('saison', 'adherent'), 1)[0];
+				
+				// Si l'adhérent a bien une ceinture (théoriquement il en aura toujours en circonstances réelles, mais pas avec les données test pas forcément)
+				// Alors on ajoute la ceinture à l'index correspondant à l'ID de l'adhérent pour retrouver facilement la bonne ceinture quand on l'affichera dans la vue
+				if($uneLigne){
+					$lesCeintures[$uneLigne['pas_adherent']] = $uneLigne['pas_ceinture'];
+				}
 			}
+			// Une fois fini on enregistre les ceintures dans le viewvar, comme d'hab
 			
-			echo "<div class='debug'><pre>";
-			print_r($this->viewvar);
-			echo "</pre></div>";
+			$this->set(array('ceinture_adherent' => $lesCeintures));
+			
+			// echo "<br/><div class='debug'><pre>";
+			// print_r($lesCeintures);
+			// echo "</pre></div>";
+			
+			// die();
+			
+			// echo "<br/><div class='debug'><pre>";
+			// print_r($this->viewvar['passer']);
+			// echo "</pre></div>";
 			
 			// die();
 			

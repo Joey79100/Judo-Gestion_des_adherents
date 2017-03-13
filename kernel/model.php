@@ -482,7 +482,7 @@ abstract class Model{
 		}
 		
 		
-		// echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
+		echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
 		
 		
 		
