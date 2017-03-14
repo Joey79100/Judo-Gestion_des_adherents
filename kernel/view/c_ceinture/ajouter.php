@@ -15,11 +15,11 @@
 			</td>
 			
 			<td>
-				<input type='textbox' name='nouvelleCeinture' placeholder='Nouvelle ceinture' form='ajoutCeinture' required />
+				<input type='text' name='nouvelleCeinture' placeholder='Nouvelle ceinture' form='ajoutCeinture' required />
 			</td>
 			
 			<td>
-				<input type='textbox' name='ageNouvelleCeinture' placeholder='Âge minimum' form='ajoutCeinture'/>
+				<input type='text' name='ageNouvelleCeinture' placeholder='Âge minimum' form='ajoutCeinture'/>
 			</td>
 		</tr>
 		<?php

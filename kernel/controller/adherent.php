@@ -76,7 +76,7 @@
 			
 			$this->adherent->setAdh_certificat_medical(isset($_POST['certificat_medical']) ? true : false);
 			$this->adherent->setAdh_licence(isset($_POST['licence']) ? true : false);
-			$this->adherent->setAdh_licence_numero($_POST['licence_numero'] ?: null);
+			$this->adherent->setAdh_licence_numero($_POST['licence_numero'] ?? null);
 			
 			echo "<br/><b>c_adherent::create() -> \$this->adherent : </b>";
 			var_dump($this->adherent);
@@ -137,22 +137,7 @@
 					// Elément lien_contact_XX trouvé : on récupère XX
 					$int = filter_var($nomColonne, FILTER_SANITIZE_NUMBER_INT);
 					
-					
-					// Chercher dans la base le lien de parenté indiqué
-					
-					$lienParente_form = strtolower($_POST['lien_contact_' . $int]);
-					$lienParente_base = $this->lien_parente->find("lie_libelle = '" . $lienParente_form . "' ")[0] ?? null;
-					
-					if($lienParente_base){
-						// S'il existe on récupère son ID
-						$this->contact->setCon_lien_parente($lienParente_base['lie_id']);
-					}else{
-						// S'il n'existe pas on le crée
-						$this->lien_parente->setLie_libelle($lienParente_form);
-						$this->lien_parente->create();
-						$this->contact->setCon_lien_parente($this->lien_parente->getLie_id());
-					}
-					
+					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $int]));
 					$this->contact->setCon_type($_POST['type_contact_' . $int]);
 					$this->contact->setCon_contact($_POST['data_contact_' . $int]);
 					$this->contact->setCon_adherent($this->adherent->getAdh_id());
@@ -254,32 +239,102 @@
 		 *						de la base.
 		 */
 		public function update(){
-			// $string = "1,4,8,12,13,14,";
-			// $string = "1";
-			
-			// $lesIds = explode(",", $string);
-			// var_dump($lesIds);
 			
 			echo "<pre>";
 			print_r($_POST);
 			echo "</pre>";
 			
+			
+			
+			/*
+			 * Récupération de toutes les données du formulaire
+			 */
 			$this->adherent->setAdh_id($_POST['id']);
 			
 			$this->adherent->setAdh_adresse_postale($_POST['adresse']);
-			$this->adherent->setAdh_adresse_complement($_POST['adresse2'] ?: null);
+			$this->adherent->setAdh_adresse_complement($_POST['adresse2'] ?? "");
 			$this->adherent->setAdh_code_postal($_POST['code_postal']);
 			$this->adherent->setAdh_ville($_POST['ville']);
 			
 			$this->adherent->setAdh_position($_POST['position']);
 			$this->adherent->setAdh_certificat_medical(isset($_POST['certificat_medical']) ? true : false);
 			$this->adherent->setAdh_licence(isset($_POST['licence']) ? true : false);
-			$this->adherent->setAdh_licence_numero($_POST['licence_numero'] ?: null);
+			$this->adherent->setAdh_licence_numero($_POST['licence_numero'] ?? null);
 			
 			echo "<hr/>";
 			
+			// Mise à jour de l'adhérent
 			$this->adherent->update();
 			
+			
+			
+			
+			echo "<hr/>";
+			
+			
+			
+			// Ajout dans la base des contacts qui ont été ajoutés dans le formulaire
+			if(isset($_POST['contactsAAjouter'])){
+				$contactsAAjouter = explode("," , $_POST['contactsAAjouter']);
+				
+				foreach($contactsAAjouter as $unContact){
+					echo "<br/> Création du contact " . $unContact . "...<br/>";
+					
+					$this->contact->setCon_contact($_POST['data_contact_' . $unContact]);
+					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $unContact]));
+					$this->contact->setCon_type($_POST['type_contact_' . $unContact]);
+					$this->contact->setCon_adherent($this->adherent->getAdh_id());
+					
+					// echo "<pre>";
+					// print_r($this->contact);
+					// echo "</pre>";
+					
+					$this->contact->create();
+				}
+			}
+			
+			echo "<hr/>";
+			
+			
+			// Modification dans la base des contacts qui ont été modifiés dans le formulaire
+			if(isset($_POST['contactsAModifier'])){
+				$contactsAModifier = explode("," , $_POST['contactsAModifier']);
+				
+				foreach($contactsAModifier as $unContact){
+					echo "<br/> Mise à jour du contact " . $unContact . "...<br/>";
+					
+					$this->contact->setCon_id($unContact);
+					
+					$this->contact->setCon_contact($_POST['data_contact_' . $unContact]);
+					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $unContact]));
+					$this->contact->setCon_type($_POST['type_contact_' . $unContact]);
+					$this->contact->setCon_adherent($this->adherent->getAdh_id());
+					
+					
+					$this->contact->update();
+				}
+			}
+			
+			echo "<hr/>";
+			
+			
+			// Suppression dans la base des contacts qui ont été supprimés dans le formulaire
+			if(isset($_POST['contactsASupprimer'])){
+				$contactsASupprimer = explode("," , $_POST['contactsASupprimer']);
+				
+				foreach($contactsASupprimer as $unContact){
+					echo "<br/> Suppression du contact " . $unContact . "<br/>";
+					$this->contact->setCon_id($unContact);
+					
+					$this->contact->delete();
+				}
+			}
+			
+			echo "<hr/>";
+			
+			
+			
+			// exit(header("Location: " . ADHERENT . 'modifier/' . $_POST['id']));
 		}
 		
 		
@@ -364,6 +419,36 @@
 			// die();
 			
 			$this->render("liste_par_cours");
+		}
+	
+	
+	
+	
+			
+		/*
+		 * getIdLienParente - Récupère l'ID du lien de parenté passé en paramètre en fonction de son libellé, et s'il n'existe pas, le créé
+		 */
+		private function getIdLienParente($libelle){
+			
+			// On cherche si ce lien de parenté existe (sans tiret, sans majuscule)
+			
+			$libelle = str_replace("-", " ", strtolower($libelle));
+			$lienParente_base = $this->lien_parente->find("lie_libelle = '" . $libelle . "' ")[0] ?? null;
+			
+			if($lienParente_base){
+				// S'il existe, alors on récupère son ID
+				
+				$idLien = $lienParente_base['lie_id'];
+			}else{
+				// S'il n'existe pas, alors on le crée
+				
+				$this->lien_parente->setLie_libelle($libelle);
+				$this->lien_parente->create();
+				
+				$idLien = $this->lien_parente->getLie_id();
+			}
+			
+			return $idLien;
 		}
 	}
 ?>

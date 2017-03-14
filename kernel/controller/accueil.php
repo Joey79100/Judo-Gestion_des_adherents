@@ -16,10 +16,11 @@
 			$this->set(array('saisons' => $this->saison->find()));
 			
 			if(isset($_POST['saison'])){
-				$saisonChoisie = $this->saison->find('sai_id = ' . $_POST['saison']);
+				$saisonChoisie = $this->saison->read($_POST['saison']);
 				
-				$_SESSION['saison']['debut'] = $saisonChoisie[0]['sai_debut']; 
-				$_SESSION['saison']['fin'] = $saisonChoisie[0]['sai_fin'];
+				// $_SESSION['saison']['id'] = $saisonChoisie['sai_id'];	// Est-ce utile ?
+				$_SESSION['saison']['debut'] = $saisonChoisie['sai_debut']; 
+				$_SESSION['saison']['fin'] = $saisonChoisie['sai_fin'];
 			}
 			
 			$this->render("index");

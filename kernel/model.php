@@ -205,15 +205,8 @@ abstract class Model{
 		foreach ($this as $unNomColonne=>$uneValeurColonne){
 			if(!in_array($unNomColonne, $this->attribtech) && !is_null($uneValeurColonne)){
 				// Pour la requete d'insertion :
-				$listeProprietes .= " $unNomColonne ,";
-				
-				if(is_bool($uneValeurColonne)){
-					$listeValeurs .= $uneValeurColonne ? " TRUE ," : " FALSE ,";
-				}else{
-					echo "<hr/>";
-					
-					$listeValeurs .= " '" . htmlspecialchars($uneValeurColonne, ENT_QUOTES) . "' ,";
-				}
+				$listeProprietes .= $unNomColonne . " ,";
+				$listeValeurs .= $this->formaterEnSQL($uneValeurColonne) . " ,";
 			}
 		}
 		
@@ -575,27 +568,22 @@ abstract class Model{
 			/*
 			*  SI la clé primaire est en auto-incrément
 			*  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça,
-			*  elle ne sera pas ajoutée dans la requête
+			*  elle ne sera pas ajoutée dans la requête (enfin pas dans la partie SET)
 			*/
 			$this->attribtech[] = $this->pk;
 		}
+		
+		
 		/*
 		*  Même fonctionnement que dans le create :	on ajoute la clé primaire dans les attributs qu'on ne veut pas ajouter à la table
 		*  Sauf que là, on sait d'avance qu'on ne va pas modifier l'ID (vu que c'est un UPDATE).
 		*  Donc pour ne pas modifier attribtech, vu qu'on veut ajouter l'ID temporairement, on l'ajoute dans une copie du tableau, et c'est cette copie qu'on utilisera.
 		*/
 		
-		
 		foreach ($this as $nomColonne=>$uneValeurColonne){
 			// Même fonctionnement que dans le create : on fait la liste des clés, et on n'ajoute que les attributs métiers (donc tout sauf ce qui est listé dans attribtech)
 			if(!in_array($nomColonne, $this->attribtech) && !is_null($uneValeurColonne)){
-				if(is_bool($uneValeurColonne)){
-					$uneValeurColonne = $uneValeurColonne ? " TRUE " : " FALSE";
-				}else{
-					$uneValeurColonne = " '" .  htmlspecialchars($uneValeurColonne, ENT_QUOTES) . "' ";
-				}
-				
-				$listeProprietes .= "$nomColonne = $uneValeurColonne , ";
+				$listeProprietes .= $nomColonne . " = " . $this->formaterEnSQL($uneValeurColonne) . " , ";
 			}
 		}
 		
@@ -621,7 +609,7 @@ abstract class Model{
 		$valeurPk = "{$this->{$this->pk}}";
 		
 		$reqUpdate = $reqUpdate . " WHERE " . $this->ecrireClePrimaire($valeurPk);
-		echo "Requête Update : <br/> <b>" . $reqUpdate . "</b";
+		echo "Requête Update : <br/> <b>" . $reqUpdate . "</b>";
 		
 		
 		$base = $this->connexion();
@@ -648,6 +636,32 @@ abstract class Model{
 		$base = $this->connexion();
 		$base->query($req);
 		$base = null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	/*
+	* formaterEnSQL -	Formate une chaîne pour l'écrire dans des requêtes SQL sans problème :
+	*					- transforme les booléens en " TRUE " ou " FALSE "
+	*					- transforme les chaînes vides en NULL
+	*					- transforme les chaînes pour supprimer les caractères sensibles (comme des apostrophes) en caractères HTML
+	*/
+	public function formaterEnSQL($chaineAFormater){
+		if(is_bool($chaineAFormater)){
+			$nouvelleChaine = $chaineAFormater ? " TRUE " : " FALSE";
+		}else{
+			if($chaineAFormater == ''){
+				$nouvelleChaine = " NULL ";
+			}else{
+				$nouvelleChaine = " '" .  htmlspecialchars($chaineAFormater, ENT_QUOTES) . "' ";
+			}
+		}
+		
+		return $nouvelleChaine;
 	}
 }
 

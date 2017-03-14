@@ -33,7 +33,7 @@
 			<div class='form-ligne'>
 				<div class='form-tiers-1'>
 					<label for='nom' class='libelle'>Nom</label>
-					<input id='nom' name='nom' id='nom' type='textbox' placeholder=\"Nom de l'adhérent\" required";
+					<input id='nom' name='nom' id='nom' type='text' placeholder=\"Nom de l'adhérent\" required";
 	
 					if($modif){
 						echo " value = '" . $this->viewvar['adherent']['adh_nom']. "' disabled";
@@ -44,7 +44,7 @@
 				
 				<div class='form-tiers-2'>
 					<label for='prenom' class='libelle'>Prénom</label>
-					<input name='prenom' id='prenom' type='textbox' placeholder=\"Prénom de l'adhérent\" required";
+					<input name='prenom' id='prenom' type='text' placeholder=\"Prénom de l'adhérent\" required";
 	
 					if($modif){
 						echo " value = '" . $this->viewvar['adherent']['adh_prenom']. "' disabled";
@@ -55,7 +55,7 @@
 				
 				<div class='form-tiers-3'>
 					<label for='famille' class='libelle'>Famille</label>
-					<input name='famille' id='famille' type='textbox' placeholder='Famille' required ";
+					<input name='famille' id='famille' type='text' placeholder='Famille' required ";
 	
 					if($modif){
 						echo " value = '" . $this->viewvar['adherent']['adh_famille']['fam_libelle']. "' disabled";
@@ -117,7 +117,7 @@
 				
 				<div class='form-tiers-3'>
 					<label for='age' class='libelle'>Âge</label>
-					<input type='textbox' name='age' id='age' placeholder='Entrez une date' disabled ";
+					<input type='text' name='age' id='age' placeholder='Entrez une date' disabled ";
 					
 					if($modif){
 						
@@ -141,7 +141,7 @@
 				<label class='libelle'>
 					Adresse
 				</label>
-				<input name='adresse' id='adresse' type='textbox' placeholder='N° de rue et adresse complète' required ";
+				<input name='adresse' id='adresse' type='text' placeholder='N° de rue et adresse complète' required ";
 	
 					if($modif){
 						echo " value='" . $this->viewvar['adherent']['adh_adresse_postale'] . "' ";
@@ -154,7 +154,7 @@
 				<label class='libelle'>
 					Complément d'adresse
 				</label>
-				<input name='adresse2' id='adresse2' type='textbox' placeholder='Immeuble, appartement, ou autre information supplémentaire'";
+				<input name='adresse2' id='adresse2' type='text' placeholder='Immeuble, appartement, ou autre information supplémentaire'";
 	
 					if($modif){
 						echo " value='" . $this->viewvar['adherent']['adh_adresse_complement'] . "' ";
@@ -166,7 +166,7 @@
 			<div class='form-ligne'>
 				<div class='form-gauche'>
 					<label class='libelle'>Code postal</label>
-					<input name='code_postal' id='code_postal' type='textbox' placeholder='Code postal' required ";
+					<input name='code_postal' id='code_postal' type='text' placeholder='Code postal' required ";
 	
 					if($modif){
 						echo " value='" . $this->viewvar['adherent']['adh_code_postal'] . "' ";
@@ -177,7 +177,7 @@
 				
 				<div class='form-droite'>
 					<label for='ville' class='libelle'>Ville</label>
-					<input name='ville' id='ville' type='textbox' placeholder='Ville' required ";
+					<input name='ville' id='ville' type='text' placeholder='Ville' required ";
 	
 					if($modif){
 						echo " value='" . $this->viewvar['adherent']['adh_ville'] . "' ";
@@ -223,7 +223,7 @@
 					<label for='licence'>
 						Licence
 					</label>
-					<input name='licence_numero' type='textbox' placeholder='Numéro de licence' ";
+					<input name='licence_numero' type='text' placeholder='Numéro de licence' ";
 	
 					if($modif && isset($this->viewvar['adherent']['adh_licence_numero'])){
 						echo "disabled value='" . $this->viewvar['adherent']['adh_licence_numero'] . "' ";

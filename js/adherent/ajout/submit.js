@@ -1,40 +1,63 @@
 
 
-// $( "form" ).submit(function( event ) {
-  // if ( $( "input:first" ).val() === "correct" ) {
-    // $( "span" ).text( "Validated..." ).show();
-    // return;
-  // }
- 
-  // $( "span" ).text( "Not valid!" ).show().fadeOut( 1000 );
-  // event.preventDefault();
-// });
 
+
+	
+/*
+ * Envoi des listes des contacts à ajouter/modifier/supprimer sous forme d'input caché
+ * Cela évite d'avoir à chercher en PHP quelles opérations ont été faites (ce qui serait bien trop compliqué sinon)
+ */
 
 
 $( "#modifAdherent" ).submit(function( event ) {
-	event.preventDefault();		// Nécessaire pour empêcher le submit par défaut et laisser le script JS gérer ça
+	// Empêcher le submit par défaut pour pouvoir le faire nous-même quand on voudra
+	
+	event.preventDefault();
 	
 	
 	
-	// Si la chaîne n'est pas vide, c'est qu'elle est remplie -> donc qu'il faut enlever la dernière virgule
-	if(contactsASupprimer.length > 0){
-		contactsASupprimer = contactsASupprimer.slice(0, -1);
+	
+	// Création des input
+
+	if(contactsAAjouter.length > 0){
+		var input_contactsAAjouter = document.createElement('input');
+		input_contactsAAjouter.type = 'hidden';
+		input_contactsAAjouter.name = 'contactsAAjouter';
+		input_contactsAAjouter.value = contactsAAjouter.join();
+		
+		modifAdherent.append(input_contactsAAjouter);
+		console.log("contactsAAjouter = " + contactsAAjouter);
 	}
 	
 	
-	// On ajoute la liste dans un input caché dans le formulaire pour pouvoir la récupérer dans le code PHP
-	// var leInput = "<input type='hidden' name='elementsASupprimer' value='" + contactsASupprimer + "' />";
-	// modifAdherent.append(leInput)
 	
-	var input = document.createElement('input');
-	input.type = 'hidden';
-	input.name = 'contactsASupprimer';
-	input.value = contactsASupprimer;
+	if(contactsAModifier.length > 0){
+		var input_contactsAModifier = document.createElement('input');
+		input_contactsAModifier.type = 'hidden';
+		input_contactsAModifier.name = 'contactsAModifier';
+		input_contactsAModifier.value = contactsAModifier.join();
+		
+		modifAdherent.append(input_contactsAModifier);
+		console.log("contactsAModifier = " + contactsAModifier);
+	}
 	
-	console.log(input);
 	
-	modifAdherent.append(input);
+	
+	if(contactsASupprimer.length > 0){
+		var input_contactsASupprimer = document.createElement('input');
+		input_contactsASupprimer.type = 'hidden';
+		input_contactsASupprimer.name = 'contactsASupprimer';
+		input_contactsASupprimer.value = contactsASupprimer.join();
+		
+		modifAdherent.append(input_contactsASupprimer);
+		console.log("contactsASupprimer = " + contactsASupprimer);
+	}
 
+	
+
+
+	
+	// Envoi du formulaire
+	
 	document.modifAdherent.submit();
 });
