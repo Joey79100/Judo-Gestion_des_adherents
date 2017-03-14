@@ -56,14 +56,14 @@
 					<label class='libelle'>
 						Texte pour champ de texte 1
 					</label>
-					<input type='textbox' name='champtexte1' placeholder='Champ de texte 1' />
+					<input type='text' name='champtexte1' placeholder='Champ de texte 1' />
 				</div>
 				
 				<div class='form-demi-ligne'>
 					<label class='libelle'>
 						Texte pour champ de texte 2
 					</label>
-					<input type='textbox' name='champtexte2' placeholder='Champ de texte 2' />
+					<input type='text' name='champtexte2' placeholder='Champ de texte 2' />
 				</div>
 			</div>
 			
@@ -77,14 +77,14 @@
 					<label class='libelle'>
 						Texte pour champ de texte 1
 					</label>
-					<input type='textbox' name='champtexte1' placeholder='Champ de texte 1' />
+					<input type='text' name='champtexte1' placeholder='Champ de texte 1' />
 				</div>
 				
 				<div class='form-droite'>
 					<label class='libelle'>
 						Texte pour champ de texte 2
 					</label>
-					<input type='textbox' name='champtexte2' placeholder='Champ de texte 2' />
+					<input type='text' name='champtexte2' placeholder='Champ de texte 2' />
 				</div>
 			</div>
 		</fieldset>
@@ -144,14 +144,14 @@
 				<label class='libelle'>
 					Texte pour champ de texte 1
 				</label>
-				<input type='textbox' name='champtexte1' placeholder='Champ de texte 1' />
+				<input type='text' name='champtexte1' placeholder='Champ de texte 1' />
 			</div>
 				
 			<div class='form-ligne'>
 				<label class='libelle'>
 					Texte pour champ de texte 2
 				</label>
-				<input type='textbox' name='champtexte2' placeholder='Champ de texte 2' />
+				<input type='text' name='champtexte2' placeholder='Champ de texte 2' />
 			</div>
 			
 		</fieldset>
@@ -175,7 +175,7 @@
 				<label class="libelle">
 				Texte pour champ de texte 3
 				</label>
-				<input type='textbox' name='champtexte3' placeholder='Champ de texte 3' />
+				<input type='text' name='champtexte3' placeholder='Champ de texte 3' />
 			</div>
 			
 			
@@ -185,7 +185,7 @@
 				<label class="form-colonne-entiere libelle">
 					Texte pour champ de texte désactivé
 				</label>
-				<input type='textbox' name='champtexte4' placeholder='Champ de texte désactivé' disabled />
+				<input type='text' name='champtexte4' placeholder='Champ de texte désactivé' disabled />
 			</div>
 			
 			

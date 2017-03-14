@@ -14,7 +14,7 @@
 			<div class='form-ligne'>
 				<div class='form-gauche'>
 					<label for='host' class='libelle' width='70%'>Adresse de connexion</label>
-					<input type='textbox' name='host' placeholder='localhost' required <?php
+					<input type='text' name='host' placeholder='localhost' required <?php
 					if(isset($conf['database']['host'])){
 						echo "value='" . $conf['database']['host'] . "'";
 					}
@@ -69,7 +69,7 @@
 			
 				<div class='form-droite'>
 					<label for='name' class='libelle'>Nom de la base</label>
-					<input  type='textbox' name='name' placeholder='judo' required <?php
+					<input  type='text' name='name' placeholder='judo' required <?php
 					if(isset($conf['database']['name'])){
 						echo "value='" . $conf['database']['name'] . "'";
 					}
@@ -81,7 +81,7 @@
 			<div class='form-ligne'>
 				<div class='form-gauche'>
 					<label for='user' class='libelle'>Nom d'utilisateur</label>
-					<input  type='textbox' name='user' placeholder='postgres' required <?php
+					<input  type='text' name='user' placeholder='postgres' required <?php
 					if(isset($conf['database']['user'])){
 						echo "value='" . $conf['database']['user'] . "'";
 					}

@@ -183,7 +183,7 @@ label input{
 
 
 /* Champ de texte */
-input[type=textbox], input[type=number], input[type=password], input[type=date], textarea, select{
+input[type=text], input[type=number], input[type=password], input[type=date], textarea, select{
 	line-height:2em;
 	font-size:105%;
 	
@@ -194,7 +194,7 @@ input[type=textbox], input[type=number], input[type=password], input[type=date],
 }
 
 
-input[type=textbox], input[type=number], input[type=password], input[type=date], textarea{
+input[type=text], input[type=number], input[type=password], input[type=date], textarea{
 	margin-bottom:1em;
 	min-width:49%;
 		width:100%;
@@ -222,7 +222,7 @@ textarea{
 
 
 /* Champ de texte activé */
-input[type=textbox]:enabled, input[type=number]:enabled, input[type=password]:enabled, input[type=date]:enabled,
+input[type=text]:enabled, input[type=number]:enabled, input[type=password]:enabled, input[type=date]:enabled,
 textarea:enabled,
 select{
 	border-bottom-style: solid;
@@ -238,7 +238,7 @@ select{
 
 
 /* Champ de texte survolé*/
-input[type=textbox]:enabled:hover, input[type=number]:enabled:hover, input[type=password]:enabled:hover, input[type=date]:enabled:hover,
+input[type=text]:enabled:hover, input[type=number]:enabled:hover, input[type=password]:enabled:hover, input[type=date]:enabled:hover,
 textarea:enabled:hover,
 select:enabled:hover{
 	/* background:<?php echo $col['background'][2]; ?>; */
@@ -250,7 +250,7 @@ select:enabled:hover{
 
 
 /* Champ de texte désactivé*/
-input[type=textbox]:disabled, input[type=number]:disabled, input[type=password]:disabled,
+input[type=text]:disabled, input[type=number]:disabled, input[type=password]:disabled,
 textarea:disabled{
 	border-bottom-style: dotted;
 	border-bottom-color: <?php echo $col['grey']; ?>;					/* COLOR: Text GREY */
@@ -262,7 +262,7 @@ textarea:disabled{
 
 
 /* Champ de texte sélectionné */
-input[type=textbox]:enabled:focus, input[type=number]:enabled:focus, input[type=password]:enabled:focus, input[type=date]:enabled:focus,
+input[type=text]:enabled:focus, input[type=number]:enabled:focus, input[type=password]:enabled:focus, input[type=date]:enabled:focus,
 textarea:enabled:focus, 
 select:enabled:focus{
 	background:<?php echo $col['background'][3]; ?>;
