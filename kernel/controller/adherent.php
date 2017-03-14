@@ -394,11 +394,11 @@
 			
 			
 			
-			
-			
-			
 			$lesAdherentsClassesParCours = array();
 			$tousLesCours = $this->cours->find();
+			
+			
+			
 			
 			
 			// Pour chaque cours existant...
@@ -409,121 +409,93 @@
 				$inscritsAuCours = $this->suivre->find('sui_saison = ' . $saisonId . ' AND sui_cours = ' . $unCours['cou_id']);
 				
 				
-				// Pour chaque inscrit à ce cours...
-				foreach($inscritsAuCours as $unInscrit){
+				// S'il y a des inscrits à ce cours
+				if($inscritsAuCours){
 					
-					// Trouver toutes les infos propres à l'adhérent
-					$adherentsDunCours[$unInscrit['sui_adherent']] = $this->adherent->read($unInscrit['sui_adherent']);
+					// Alors pour chaque inscrit à ce cours...
+					foreach($inscritsAuCours as $unInscrit){
+						
+						$idAdherent = $unInscrit['sui_adherent'];
+						
+						
+						// Trouver toutes les infos propres à l'adhérent
+						$adherentsDuCours[$idAdherent] = $this->adherent->read($idAdherent, 2);
+						
+						
+						
+						$leReadMarchePasBien = false;			// Puisque le read marche pas bien puisqu'il a pas l'air de vouloir prendre les clés étrangères...
+						// $leReadMarchePasBien = true;			// Puisque le read marche pas bien puisqu'il a pas l'air de vouloir prendre les clés étrangères...
+						
+						if($leReadMarchePasBien){
+							
+							// --- Récupération de la famille ---
+							
+							$idFamille = $adherentsDuCours[$idAdherent]['adh_famille'];
+							$laFamille = $this->famille->read($idFamille);
+							$adherentDuCours[$idAdherent]['adh_famille'] = $laFamille ?? null;
+							
+							
+							
+							// --- Récupération de la position ---
+							
+							$idPosition = $adherentsDuCours[$idAdherent]['adh_position'];
+							$laPosition = $this->position->read($idPosition);
+							$adherentDuCours[$idAdherent]['adh_position'] = $laPosition ?? null;
+							
+							
+							
+							
+							// --- Récupération de la ceinture ---
+							
+							$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $idAdherent, 'pas_date DESC', 1)[0];	// Trouver le numéro de la dernière ceinture de l'adhérent...
+							$laCeinture = $this->ceinture->read($lePassageDeCeinture['pas_ceinture']);																// ..trouver le nom de cette ceinture...
+							$adherentsDuCours[$idAdherent]['adh_ceinture'] = $laCeinture ?? null;																	// ...et mettre à l'adhérent cette ceinture
+						}
+						
+						
+						
+						// --- Récupération des contacts ---
+						
+						$tousLesContactsDeLadherent = $this->contact->find("con_adherent = " . $idAdherent, null, null, array('adherent'), 1);
+						foreach($tousLesContactsDeLadherent as $unContact){
+							$lesContacts[] = $unContact;
+						}
+						
+						$adherentsDuCours[$idAdherent]['adh_contacts'] = $lesContacts;
+						
+					}
 					
+					$lesAdherentsClassesParCours[$unCours['cou_id']]['lesAdherents'] = $adherentsDuCours;
 					
+					$lesAdherentsClassesParCours[$unCours['cou_id']]['cou_id'] = $unCours['cou_id'];
+					$lesAdherentsClassesParCours[$unCours['cou_id']]['cou_libelle'] = $unCours['cou_libelle'];
 					
-					// Trouver la dernière ceinture de l'adhérent...
-					$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $unInscrit['sui_adherent'], 'pas_date DESC', 1)[0];
+					// var_dump($adherentsDuCours);
 					
-					// ...et la lui mettre
-					$adherentsDunCours[$unInscrit['sui_adherent']]['adh_ceinture'] = $lePassageDeCeinture['cei_libelle'] ?? null;		//  MARCHE PAS  /!\
-					
-					
-				}
-				
-				$lesAdherentsClassesParCours[$unCours['cou_id']] = $adherentsDunCours;
-				$adherentsDunCours = null;
-			}
-			
-			
-			echo "<br/>";
-			echo "\$lesAdherentsClassesParCours : <br/><pre>";
-			print_r($lesAdherentsClassesParCours);
-			echo "</pre>";
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			die();
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, null, -1)));
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/*
-			 * Récupération de tous les passages de ceintures (afin de déterminer quelle ceinture porte actuellement chacun des adhérents)
-			 * Quand il y a plusieurs ceintures pour le même adhérent, seul le dernier passage est retenu (pour la saison demandée en tous cas).
-			 *
-			 * Pour chaque adhérent (récupérés via leur inscription dans un cours puisqu'on les affiche classés par cours), on récupère la ceinture qui va bien.
-			 */
-			
-			foreach($this->viewvar['suivre'] as $uneLigne){
-				// Recherche du dernier passage de ceinture en date l'adhérent
-				$uneLigne = $this->passer->find('pas_saison = ' . $saisonId . ' AND pas_adherent = ' . $uneLigne['sui_adherent']['adh_id'], 'pas_date DESC', 1, array('saison', 'adherent'), 1)[0];
-				
-				// Si l'adhérent a bien une ceinture (théoriquement il en aura toujours en circonstances réelles, mais pas avec les données test pas forcément)
-				// Alors on ajoute la ceinture à l'index correspondant à l'ID de l'adhérent pour retrouver facilement la bonne ceinture quand on l'affichera dans la vue
-				if($uneLigne){
-					$lesCeintures[$uneLigne['pas_adherent']] = $uneLigne['pas_ceinture'];
+					$adherentsDuCours = null;
 				}
 			}
-			// Une fois fini on enregistre les ceintures dans le viewvar, comme d'hab
 			
-			$this->set(array('ceinture_adherent' => $lesCeintures));
 			
-			// echo "<br/><div class='debug'><pre>";
-			// print_r($lesCeintures);
-			// echo "</pre></div>";
+			// echo "<br/>";
+			// echo "\$lesAdherentsClassesParCours : <br/><pre>";
+			// print_r($lesAdherentsClassesParCours);
+			// echo "</pre>";
+			
+			
+			$this->set(array('lesAdherentsTries' => $lesAdherentsClassesParCours));
+			$this->set(array('cours' => $tousLesCours));
+			
+			
+			
+			
 			
 			// die();
 			
-			// echo "<br/><div class='debug'><pre>";
-			// print_r($this->viewvar['passer']);
-			// echo "</pre></div>";
 			
-			// die();
+			
+			
+			
 			
 			$this->render("liste_par_cours");
 		}

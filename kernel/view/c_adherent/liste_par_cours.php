@@ -1,30 +1,6 @@
 <?php
-	$debug = true;		// Affiche une colonne supplémentaires avec les données brutes de la base
-	
-	
-	// echo "<div class='window' style='background:#ccf;'><h1>\$this->viewvar['suivre']</h1>";
-	// echo "<pre> ";
-	// print_r($this->viewvar['suivre']);
-	// echo "</pre>";
-	// echo "</div>";
-	
-	
-	
-	
-	
-	
-	
-	// echo "<div class='debug'><pre>";
-	// print_r($this->viewvar['suivre']);
-	// echo "</pre></div>";
-	
-	
-	
-	
-	$nbCours = 0;
-	$i = 0;
-	$tailleTab = count($this->viewvar['suivre']);
-	
+	$debug = false;		// Affiche une colonne supplémentaires avec les données brutes de la base
+	// $debug = true;		// Affiche une colonne supplémentaires avec les données brutes de la base
 	
 	
 	
@@ -57,32 +33,29 @@
 	
 	
 	
-	// echo "<div class='debug'> <pre>";
-	// print_r($this->viewvar);
-	// echo "</pre> </div>";
 	
 	
+	
+	$nbCours = 0;
+	$nbAdherents = 0;
+	
+	// Pour chaque cours, une fenêtre
+	
+	foreach($this->viewvar['lesAdherentsTries'] as $unCours){
 		
-	
-	
-	
-	
-	
-	
-	while($i < $tailleTab){
-		
-		$cours_old = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
-		$cours     = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
-			
-		$nbCours++;
+		// echo "<div class='debug'><pre>";
+		// print_r($this->viewvar['lesAdherentsTries']);
+		// print_r($unCours);
+		// echo "</pre></div>";
+		// break;
 		
 		echo "<div class='window'>
 			<span>
-				<h1 class='div_cours_titre' id='div_cours_titre_" . $nbCours . "'>" . $this->viewvar['suivre'][$i]['sui_cours']['cou_libelle'] . "</h1>
-				<button type='button' id='div_cours_" . $nbCours . "_button' class='boutonOuvertureCours'>-</button>
+				<h1 class='div_cours_titre' id='div_cours_titre_" . $unCours['cou_id'] . "'>" . $unCours['cou_libelle'] . "</h1>
+				<button type='button' id='div_cours_" . $unCours['cou_id'] . "_button' class='boutonOuvertureCours'>-</button>
 			</span>
 			
-			<div class='div_cours' id='div_cours_" . $nbCours . "'>
+			<div class='div_cours' id='div_cours_" . $unCours['cou_id'] . "'>
 			
 				<table class='liste_adherents'>	
 				
@@ -107,35 +80,36 @@
 					echo "</tr>
 				";
 			
-			while($i < $tailleTab && $cours_old == $cours){
+			
+			foreach($unCours['lesAdherents'] as $unAdherent){
 				echo "
 					<tr>
-						<td> " . strtoupper($this->viewvar['suivre'][$i]['sui_adherent']['adh_famille']['fam_libelle']) . " </td>
+						<td> " . strtoupper($unAdherent['adh_famille']['fam_libelle']) . " </td>
 						<td> " . "T" . " </td>
 						<td> " . "05.04.03.02.01" . " </td>
-						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_adresse_postale'] . " "
-							   . $this->viewvar['suivre'][$i]['sui_adherent']['adh_code_postal'] . " " .  $this->viewvar['suivre'][$i]['sui_adherent']['adh_ville'] . " </td>
-						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_nom'] . " </td>
-						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_prenom'] . " </td>
-						<td> " . ucfirst($this->viewvar['suivre'][$i]['sui_adherent']['adh_position']['pos_libelle']) . " </td>
-						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_date_naissance'] . " </td>
+						<td> " . $unAdherent['adh_adresse_postale'] . " "
+							   . $unAdherent['adh_code_postal'] . " " .  $unAdherent['adh_ville'] . " </td>
+						<td> " . $unAdherent['adh_nom'] . " </td>
+						<td> " . $unAdherent['adh_prenom'] . " </td>
+						<td> " . ucfirst($unAdherent['adh_position']['pos_libelle']) . " </td>
+						<td> " . date_ToFR($unAdherent['adh_date_naissance']) . " </td>
 						<td> " . "42" . " </td>
-						<td> " . $this->viewvar['suivre'][$i]['sui_adherent']['adh_genre'] . " </td>
+						<td> " . $unAdherent['adh_genre'] . " </td>
 						<td> ";
 
-				$idAdherent = $this->viewvar['suivre'][$i]['sui_adherent']['adh_id'];
-				echo ucfirst(($this->viewvar['ceinture_adherent'][$idAdherent]['cei_libelle'] ?? "N/A"));		// Afficher la ceinture s'il y a, sinon 'N/A'
+				$idAdherent = $unAdherent['adh_id'];
+				echo ucfirst($unAdherent['adh_ceinture'] ?? "N/A");		// Afficher la ceinture s'il y a, sinon 'N/A'
 				
 				echo	" </td>
 						<td> " .
 						
-						($this->viewvar['suivre'][$i]['sui_adherent']['adh_certificat_medical'] ?
+						($unAdherent['adh_certificat_medical'] ?
 							"Oui" : "Non") . " </td>
 						
 						<td> " .
 						
-						($this->viewvar['suivre'][$i]['sui_adherent']['adh_licence'] ?
-							$this->viewvar['suivre'][$i]['sui_adherent']['adh_licence_numero'] : "N/A") .
+						($unAdherent['adh_licence'] ?
+							$unAdherent['adh_licence_numero'] : "N/A") .
 							
 						" </td>";
 						
@@ -152,13 +126,17 @@
 					</tr>
 				";
 				
-				$cours = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
+				// $cours = $this->viewvar['suivre'][$i]['sui_cours']['cou_id'];
 				// echo '<br/>Le cours ' . $cours;
 				
 				
-				$i++;		// Affichage de l'élément terminé : lecture du prochain adhérent
+				// $i++;		// Affichage de l'élément terminé : lecture du prochain adhérent
 			}
 			echo "</table>";
+			
+			
+			
+			
 			
 			
 			/*
@@ -167,18 +145,18 @@
 			echo "
 				<div class='tableau-boutons'>
 					<div class='tableau-bouton-gauche'>
-						<form id='passer_ceintures_" . $cours_old . "' method=post style='display:none;' action='" . WEBROOT . "ceinture/passer'>
-							<input type='hidden' name='cours'  value='" . $cours_old . "'>
+						<form id='passer_ceintures_" . $unCours['cou_id'] . "' method=post style='display:none;' action='" . WEBROOT . "ceinture/passer'>
+							<input type='hidden' name='cours'  value='" . $unCours['cou_id'] . "'>
 						</form>
-						<button type='submit' form='passer_ceintures_" . $cours_old . "' formaction='" . WEBROOT . "ceinture/passer'>Passer des ceintures</button>
+						<button type='submit' form='passer_ceintures_" . $unCours['cou_id'] . "' formaction='" . WEBROOT . "ceinture/passer'>Passer des ceintures</button>
 					</div>
 					
 					<div class='tableau-bouton-droite'>
-						<form id='fiche_renseignements_" . $cours_old . "' method=post style='display:none;'></form>
-						<button type='button' form='fiche_renseignements_" . $cours_old . "'>Fiche de renseignements</button>
+						<form id='fiche_renseignements_" . $unCours['cou_id'] . "' method=post style='display:none;'></form>
+						<button type='button' form='fiche_renseignements_" . $unCours['cou_id'] . "'>Fiche de renseignements</button>
 						
-						<form id='fiche_presence_" . $cours_old . "' method=post style='display:none;'></form>
-						<button type='button' form='fiche_presence_" . $cours_old . "'>Fiche de présence</button>
+						<form id='fiche_presence_" . $unCours['cou_id'] . "' method=post style='display:none;'></form>
+						<button type='button' form='fiche_presence_" . $unCours['cou_id'] . "'>Fiche de présence</button>
 					</div>
 				</div>
 			</div>
@@ -192,13 +170,13 @@
 
 
 <?php
-	echo "
-		<div class='window'>
-			<h1>Statistiques</h1>
-			Nombre de cours : " . $nbCours . "<br/>
-			Nombre d'adhérents : " . $i . "<br/>
-		</div>
-	";
+	// echo "
+		// <div class='window'>
+			// <h1>Statistiques</h1>
+			// Nombre de cours : " . $nbCours . "<br/>
+			// Nombre d'adhérents : " . $i . "<br/>
+		// </div>
+	// ";
 	
 	
 	
