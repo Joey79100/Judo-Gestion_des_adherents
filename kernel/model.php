@@ -250,25 +250,15 @@ abstract class Model{
 	
 	
 	
-	
-	private function ecrireRequeteRead($id){
-		// echo "<hr/><b><font color='blue'>ENTREE DANS model::ecrireRequeteRead()</font></b><br/>";
+	/*
+	* ecrireClePrimaire - Ecrit la partie "WHERE ..." d'un requête pour laquelle on a besoin de chercher la clé primaire (read, delete, ou update).
+	*
+	* @return	Chaîne 
+	*/
+	private function ecrireClePrimaire($id){
+		// echo "<hr/><b><font color='blue'>ENTREE DANS model::ecrireClePrimaire()</font></b><br/>";
 		
-		// echo "<br/> <u>model::ecrireRequeteRead() -> \$id :</u> <br/>";
-		// echo "<pre>";
-		// print_r($id);
-		// echo "</pre>";
-		// var_dump($id);
-		
-		// echo "<br/> <u>model::ecrireRequeteRead() -> \$this->pk :</u> <br/>";
-		// echo "<pre>";
-		// print_r($this->pk);
-		// echo "</pre>";
-		// var_dump($this->pk);
-		
-		
-		$req = "SELECT * FROM {$this->table} WHERE ";
-		
+		$req = "";
 		
 		if(is_array($this->pk)){								// Cas d'une clé primaire composée
 		
@@ -280,7 +270,7 @@ abstract class Model{
 				$req = substr($req, 0, -4); // Pour enlever le denier 'AND' inutile de la requête
 				
 			}else{
-				die("<br/><font color='darkred'>model::ecrireRequeteRead -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
+				die("<br/><font color='darkred'>model::ecrireClePrimaire -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
 			}
 		}else{													// Cas d'une clé primaire classique
 			if(is_array($id)){
@@ -290,10 +280,10 @@ abstract class Model{
 			}
 		}
 		
-		// echo "<br/><b>model::ecrireRequeteRead() -> \$req :</b> " . $req . "<br/>";
+		// echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
 		
 		
-		// echo "<br/><b><font color='blue'>SORTIE DE model::ecrireRequeteRead()</font></b><hr/>";
+		// echo "<br/><b><font color='blue'>SORTIE DE model::ecrireClePrimaire()</font></b><hr/>";
 		return $req;
 	}
 	
@@ -317,7 +307,7 @@ abstract class Model{
 		// print_r($id);
 		// echo "</pre></br>";
 		
-		$requete = $this->ecrireRequeteRead($id);
+		$requete = "SELECT * FROM {$this->table} WHERE " . $this->ecrireClePrimaire($id);
 		
 		// echo "<br/><b>model::lineExist() -> \$requete :</b> " . $requete . "<br/>";
 		
@@ -578,11 +568,17 @@ abstract class Model{
 	* update -	Met à jour un enregistrement dans la base (en fonction des attributs de l'objet)
 	*/
 	public function update(){
-		$propriete = "";
-		$valeur = "";
+		$listeProprietes = "";
 		
-		$attribtechTEMP = $this->attribtech;		
-		$attribtechTEMP[] = $this->pk;
+
+		if($this->estAutoIncrement){
+			/*
+			*  SI la clé primaire est en auto-incrément
+			*  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça,
+			*  elle ne sera pas ajoutée dans la requête
+			*/
+			$this->attribtech[] = $this->pk;
+		}
 		/*
 		*  Même fonctionnement que dans le create :	on ajoute la clé primaire dans les attributs qu'on ne veut pas ajouter à la table
 		*  Sauf que là, on sait d'avance qu'on ne va pas modifier l'ID (vu que c'est un UPDATE).
@@ -590,17 +586,23 @@ abstract class Model{
 		*/
 		
 		
-		foreach ($this as $nomColonne=>$saValeur){
+		foreach ($this as $nomColonne=>$uneValeurColonne){
 			// Même fonctionnement que dans le create : on fait la liste des clés, et on n'ajoute que les attributs métiers (donc tout sauf ce qui est listé dans attribtech)
-			if(!in_array($nomColonne, $attribtechTEMP)){
-				$propriete = $propriete."$nomColonne = '$saValeur' ,";
+			if(!in_array($nomColonne, $this->attribtech) && !is_null($uneValeurColonne)){
+				if(is_bool($uneValeurColonne)){
+					$uneValeurColonne = $uneValeurColonne ? " TRUE " : " FALSE";
+				}else{
+					$uneValeurColonne = " '" .  htmlspecialchars($uneValeurColonne, ENT_QUOTES) . "' ";
+				}
+				
+				$listeProprietes .= "$nomColonne = $uneValeurColonne , ";
 			}
 		}
 		
 		$reqUpdate = "UPDATE {$this->table} SET ";			// Début requête
 		
-		$reqUpdate = $reqUpdate . $propriete;				// Ajout, dans la requête, de la liste des propriétés et des clés qui y correspondent (ce qu'on a fait avec le foreach)
-		$reqUpdate = substr($reqUpdate, 0, -1);
+		$reqUpdate = $reqUpdate . $listeProprietes;			// Ajout, dans la requête, de la liste des propriétés et des clés qui y correspondent (ce qu'on a fait avec le foreach)
+		$reqUpdate = substr($reqUpdate, 0, -2);
 		
 		/*
 		*  On a accès au NOM de la clé primaire, mais pas sa VALEUR... enfin pas directement. Mais on en a besoin dans la requête pour le WHERE.
@@ -618,12 +620,12 @@ abstract class Model{
 		*/
 		$valeurPk = "{$this->{$this->pk}}";
 		
-		$reqUpdate = $reqUpdate . " WHERE $this->pk = $valeurPk";
-		echo "Requête Update : <br/>" . $reqUpdate;
+		$reqUpdate = $reqUpdate . " WHERE " . $this->ecrireClePrimaire($valeurPk);
+		echo "Requête Update : <br/> <b>" . $reqUpdate . "</b";
 		
 		
 		$base = $this->connexion();
-		$base->query($reqUpdate);
+		$base->exec($reqUpdate);
 		$base = null;
 	}
 	

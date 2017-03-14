@@ -18,11 +18,11 @@
 	}
 	echo "<hr/>";
 	
-	if(!$modif){
-		echo "<form method='post' class='form-ajout-modif-adherent' name='ajoutAdherent' id='ajoutAdherent' action='" . ADHERENT . "create'>";
-	}else{
+	if($modif){
 		echo "<form method='post' class='form-ajout-modif-adherent' name='modifAdherent' id='modifAdherent' action='" . ADHERENT . "update'>
-				<input type='hidden' id='id' value='" . $this->viewvar['adherent']['adh_id'] . "' / >";
+				<input type='hidden' name='id' value='" . $this->viewvar['adherent']['adh_id'] . "' / >";
+	}else{
+		echo "<form method='post' class='form-ajout-modif-adherent' name='ajoutAdherent' id='ajoutAdherent' action='" . ADHERENT . "create'>";
 	}
 	
 	

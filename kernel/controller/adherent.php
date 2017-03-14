@@ -35,7 +35,7 @@
 			$this->set(array('position' => $this->position->find()));
 			$this->set(array('cours' => $this->cours->find()));
 			$this->set(array('ceinture' => $this->ceinture->find()));
-			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", 12, array("position"), 2)));
+			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", null, array("position"), 2)));
 			
 			$this->render("ajout_modif");
 		}
@@ -264,13 +264,22 @@
 			print_r($_POST);
 			echo "</pre>";
 			
-			
-			
+			$this->adherent->setAdh_id($_POST['id']);
 			
 			$this->adherent->setAdh_adresse_postale($_POST['adresse']);
 			$this->adherent->setAdh_adresse_complement($_POST['adresse2'] ?: null);
 			$this->adherent->setAdh_code_postal($_POST['code_postal']);
 			$this->adherent->setAdh_ville($_POST['ville']);
+			
+			$this->adherent->setAdh_position($_POST['position']);
+			$this->adherent->setAdh_certificat_medical(isset($_POST['certificat_medical']) ? true : false);
+			$this->adherent->setAdh_licence(isset($_POST['licence']) ? true : false);
+			$this->adherent->setAdh_licence_numero($_POST['licence_numero'] ?: null);
+			
+			echo "<hr/>";
+			
+			$this->adherent->update();
+			
 		}
 		
 		
