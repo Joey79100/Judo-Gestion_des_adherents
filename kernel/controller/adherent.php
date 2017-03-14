@@ -369,6 +369,10 @@
 			
 			
 			
+			
+			
+			
+			
 			// Récupération des adhérents ordonnés par cours pour la saison choisie
 			
 			
@@ -380,7 +384,110 @@
 			
 			
 			
-			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, array('saison'), 2)));
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			$lesAdherentsClassesParCours = array();
+			$tousLesCours = $this->cours->find();
+			
+			
+			// Pour chaque cours existant...
+			foreach($tousLesCours as $unCours){
+				
+				
+				// Chercher tous les gens qui y sont inscrit (enfin, leur numéro)
+				$inscritsAuCours = $this->suivre->find('sui_saison = ' . $saisonId . ' AND sui_cours = ' . $unCours['cou_id']);
+				
+				
+				// Pour chaque inscrit à ce cours...
+				foreach($inscritsAuCours as $unInscrit){
+					
+					// Trouver toutes les infos propres à l'adhérent
+					$adherentsDunCours[$unInscrit['sui_adherent']] = $this->adherent->read($unInscrit['sui_adherent']);
+					
+					
+					
+					// Trouver la dernière ceinture de l'adhérent...
+					$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $unInscrit['sui_adherent'], 'pas_date DESC', 1)[0];
+					
+					// ...et la lui mettre
+					$adherentsDunCours[$unInscrit['sui_adherent']]['adh_ceinture'] = $lePassageDeCeinture['cei_libelle'] ?? null;		//  MARCHE PAS  /!\
+					
+					
+				}
+				
+				$lesAdherentsClassesParCours[$unCours['cou_id']] = $adherentsDunCours;
+				$adherentsDunCours = null;
+			}
+			
+			
+			echo "<br/>";
+			echo "\$lesAdherentsClassesParCours : <br/><pre>";
+			print_r($lesAdherentsClassesParCours);
+			echo "</pre>";
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			die();
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			$this->set(array('suivre' => $this->suivre->find('sui_saison = ' . $saisonId, 'sui_cours, sui_adherent', $nbmax, null, -1)));
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -426,7 +533,9 @@
 	
 			
 		/*
-		 * getIdLienParente - Récupère l'ID du lien de parenté passé en paramètre en fonction de son libellé, et s'il n'existe pas, le créé
+		 * getIdLienParente - Récupère l'ID du lien de parenté passé en paramètre en fonction de son libellé, et s'il n'existe pas, le crée.
+		 *
+		 * return		l'id du lien de parenté correspondant au libellé fourni en paramètre
 		 */
 		private function getIdLienParente($libelle){
 			
