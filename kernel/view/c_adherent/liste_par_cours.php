@@ -112,7 +112,7 @@
 						<td> " . $unAdherent['adh_prenom'] . " </td>
 						<td> " . ucfirst($unAdherent['adh_position']['pos_libelle']) . " </td>
 						<td> " . date_ToFR($unAdherent['adh_date_naissance']) . " </td>
-						<td> " . "TODO..." . " </td>
+						<td> " . calculerAge($unAdherent['adh_date_naissance']) . " </td>
 						<td> " . $unAdherent['adh_genre'] . " </td>
 						<td> ";
 

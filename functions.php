@@ -77,6 +77,21 @@
 	function date_toFR($dateSource){
 		return dateConvert($dateSource, $formatSource = 'Y-m-d',  $formatDestination = 'd/m/Y');
 	}
-	
-	
+
+
+
+	/*
+	 * calculerAge - Calcule l'âge d'une personne en fonction de sa date de naissance
+	 * 
+	 * @param		La date de naissance (au format SQL : YYYY-MM-DD)
+	 * @return		L'âge calculé
+	 */
+	function calculerAge($dateNaissanceSQL){
+		$dateDuJour = new DateTime('today');
+		$dateNaissance = DateTime::createFromFormat('Y-m-d', $dateNaissanceSQL);
+		
+		$age = $dateNaissance->diff($dateDuJour)->y;
+		
+		return($age);
+	}
 ?>

@@ -120,7 +120,7 @@
 					<input type='text' name='age' id='age' placeholder='Entrez une date' disabled ";
 					
 					if($modif){
-						
+						echo "value ='" . calculerAge($this->viewvar['adherent']['adh_date_naissance']) . "' ";
 					}
 					
 	echo "			/>
