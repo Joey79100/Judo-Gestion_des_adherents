@@ -348,7 +348,6 @@
 		public function liste_par_cours(){
 			
 			
-			
 			/*
 			 * Récupération de la saison à afficher. Si l'utilisateur a cliqué sur "Retourner vers le présent"
 			 * (possible uniquement si la session affichée est différente de la saison actuelle) alors on récupère la saison actuelle.
@@ -372,31 +371,25 @@
 			
 			
 			
-			
-			// Récupération des adhérents ordonnés par cours pour la saison choisie
-			
-			
-			$nbmax = null;
-			// $nbmax = 15;
-			if($nbmax != null){
-				echo "<div class='debug'> NOTE : Seulement " . $nbmax . " enregistrements ont été chargés. </div>";
-			}
+			/*
+			 * Ici on récupère les cours (COURS), puis les inscriptions à ce cours (SUIVRE), et pour chaque inscription on récupère l'adhérent correspondant
+			 * ainsi que les informations 
+			 */
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			$limiteNbCours = null;
+			$limiteNbCours = 2;
 			
 			$lesAdherentsClassesParCours = array();
-			$tousLesCours = $this->cours->find();
+			$tousLesCours = $this->cours->find(null, null, $limiteNbCours, null, null);
 			
+			if($limiteNbCours){
+				echo "
+					<div class='debug'>
+						<b> Tous les cours n'ont pas été chargés (" . $limiteNbCours . " cours). </b>
+					</div>
+				";
+			}
 			
 			
 			
@@ -404,95 +397,83 @@
 			// Pour chaque cours existant...
 			foreach($tousLesCours as $unCours){
 				
-				
 				// Chercher tous les gens qui y sont inscrit (enfin, leur numéro)
 				$inscritsAuCours = $this->suivre->find('sui_saison = ' . $saisonId . ' AND sui_cours = ' . $unCours['cou_id']);
-				
 				
 				// S'il y a des inscrits à ce cours
 				if($inscritsAuCours){
 					
-					// Alors pour chaque inscrit à ce cours...
+					// Alors pour chacune de ces inscriptions...
 					foreach($inscritsAuCours as $unInscrit){
-						
 						$idAdherent = $unInscrit['sui_adherent'];
 						
 						
 						// Trouver toutes les infos propres à l'adhérent
-						$adherentsDuCours[$idAdherent] = $this->adherent->read($idAdherent, 2);
+						// $adherentsDuCours[$idAdherent] = $this->adherent->read($idAdherent, 2);
+						$adherentsDuCours[$idAdherent] = $this->adherent->find('adh_id = ' . $idAdherent, null, 1, null, 1)[0];		// Un READ devrait suffire plutôt qu'un FIND...
+						
+								
+								
+								
+						// --- Récupération de la ceinture ---
+						
+						$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $idAdherent, 'pas_date DESC', 1)[0];	// Trouver le numéro de la dernière ceinture de l'adhérent...
 						
 						
+						$laCeinture = isset($lePassageDeCeinture) ? $this->ceinture->read($lePassageDeCeinture['pas_ceinture']) : null;									// ..trouver le nom de cette ceinture... (si un passage de ceinture a été trouvé, mais avec des vraies données, il y aura toujours au moins une ceinture pour chaque adhérent)
+						// $laCeinture = $this->ceinture->read($lePassageDeCeinture['pas_ceinture']);																// ..trouver le nom de cette ceinture...
+						$adherentsDuCours[$idAdherent]['adh_ceinture'] = $laCeinture ?? null;	
 						
-						$leReadMarchePasBien = false;			// Puisque le read marche pas bien puisqu'il a pas l'air de vouloir prendre les clés étrangères...
-						// $leReadMarchePasBien = true;			// Puisque le read marche pas bien puisqu'il a pas l'air de vouloir prendre les clés étrangères...
-						
-						if($leReadMarchePasBien){
-							
-							// --- Récupération de la famille ---
-							
-							$idFamille = $adherentsDuCours[$idAdherent]['adh_famille'];
-							$laFamille = $this->famille->read($idFamille);
-							$adherentDuCours[$idAdherent]['adh_famille'] = $laFamille ?? null;
-							
-							
-							
-							// --- Récupération de la position ---
-							
-							$idPosition = $adherentsDuCours[$idAdherent]['adh_position'];
-							$laPosition = $this->position->read($idPosition);
-							$adherentDuCours[$idAdherent]['adh_position'] = $laPosition ?? null;
-							
-							
-							
-							
-							// --- Récupération de la ceinture ---
-							
-							$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $idAdherent, 'pas_date DESC', 1)[0];	// Trouver le numéro de la dernière ceinture de l'adhérent...
-							$laCeinture = $this->ceinture->read($lePassageDeCeinture['pas_ceinture']);																// ..trouver le nom de cette ceinture...
-							$adherentsDuCours[$idAdherent]['adh_ceinture'] = $laCeinture ?? null;																	// ...et mettre à l'adhérent cette ceinture
-						}
 						
 						
 						
 						// --- Récupération des contacts ---
 						
-						$tousLesContactsDeLadherent = $this->contact->find("con_adherent = " . $idAdherent, null, null, array('adherent'), 1);
-						foreach($tousLesContactsDeLadherent as $unContact){
-							$lesContacts[] = $unContact;
+						$tousLesContactsDeLadherent = $this->contact->find("con_adherent = " . $idAdherent, null, null, array('adherent'), null);
+						if($tousLesContactsDeLadherent){
+							foreach($tousLesContactsDeLadherent as $unContact){
+								$lesContacts[] = $unContact;
+							}
 						}
-						
 						$adherentsDuCours[$idAdherent]['adh_contacts'] = $lesContacts;
+						$lesContacts = null;
 						
 					}
 					
+					// Ajouter les adhérents de ce cours dans la liste finale (le tableau-des-adhérents-classés-par-cours)
 					$lesAdherentsClassesParCours[$unCours['cou_id']]['lesAdherents'] = $adherentsDuCours;
+					// Puis vider le tableau temporaire de ces adhérents pour pas que les adhérents récupérés soient aussi rangés dans le cours suivant
+					$adherentsDuCours = null;
 					
+					
+					// Enregistrement de l'ID et du nom du cours
 					$lesAdherentsClassesParCours[$unCours['cou_id']]['cou_id'] = $unCours['cou_id'];
 					$lesAdherentsClassesParCours[$unCours['cou_id']]['cou_libelle'] = $unCours['cou_libelle'];
 					
 					// var_dump($adherentsDuCours);
-					
-					$adherentsDuCours = null;
 				}
 			}
 			
-			
-			// echo "<br/>";
-			// echo "\$lesAdherentsClassesParCours : <br/><pre>";
-			// print_r($lesAdherentsClassesParCours);
-			// echo "</pre>";
-			
-			
+			// Enregistrement dans le viewvar du tableau trié des adhérents dans leur cours respectif
 			$this->set(array('lesAdherentsTries' => $lesAdherentsClassesParCours));
-			$this->set(array('cours' => $tousLesCours));
 			
 			
 			
 			
+			// Juste histoire de faire correspondre les index de chaque entrée à l'ID du type
+			$lesTypes = $this->type_contact->find();
+			foreach($lesTypes as $unType){
+				$tousLesTypes[$unType['typ_id']] = $unType;
+			}
+			$this->set(array('type_contact' => $tousLesTypes));
 			
-			// die();
 			
-			
+			// Juste histoire de faire correspondre les index de chaque entrée à l'ID du lien
+			$lesLiensDeParente = $this->lien_parente->find();
+			foreach($lesLiensDeParente as $unLien){
+				$tousLesLiens[$unLien['lie_id']] = $unLien;
+			}
+			$this->set(array('lien_parente' => $tousLesLiens));
 			
 			
 			

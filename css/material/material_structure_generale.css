@@ -290,7 +290,7 @@ hr{
 
 
 form,
-table:not(.ui-datepicker-calendar){
+table:not(.ui-datepicker-calendar):not(.tableau-interne){
 	background: <?php echo $col['background'][4]; ?>;
 	<?php echo $shadow['NORMAL']; ?>
 }

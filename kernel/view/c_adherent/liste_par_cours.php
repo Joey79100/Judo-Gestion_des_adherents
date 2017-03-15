@@ -1,7 +1,4 @@
 <?php
-	$debug = false;		// Affiche une colonne supplémentaires avec les données brutes de la base
-	// $debug = true;		// Affiche une colonne supplémentaires avec les données brutes de la base
-	
 	
 	
 	
@@ -43,11 +40,6 @@
 	
 	foreach($this->viewvar['lesAdherentsTries'] as $unCours){
 		
-		// echo "<div class='debug'><pre>";
-		// print_r($this->viewvar['lesAdherentsTries']);
-		// print_r($unCours);
-		// echo "</pre></div>";
-		// break;
 		
 		echo "<div class='window'>
 			<span>
@@ -61,7 +53,7 @@
 				
 					<tr>
 						<th> FAMILLE </th>
-						<th colspan=2> Contact </th>
+						<th> Contact </th>
 						<th> Adresse </th>
 						<th> Nom </th>
 						<th> Prénom </th>
@@ -72,55 +64,65 @@
 						<th> Ceinture </th>
 						<th> CM </th>
 						<th> Licence </th>";
-						
-						if($debug){
-							echo "<th> SAI, ADH, COU </th>";
-						}
-						
 					echo "</tr>
 				";
 			
 			
+			
+			/*
+			 * Affichage de tous les adhérents du cours
+			 */
+			
+			
 			foreach($unCours['lesAdherents'] as $unAdherent){
-				echo "
-					<tr>
-						<td> " . strtoupper($unAdherent['adh_famille']['fam_libelle']) . " </td>
-						<td> " . "T" . " </td>
-						<td> " . "05.04.03.02.01" . " </td>
-						<td> " . $unAdherent['adh_adresse_postale'] . " "
-							   . $unAdherent['adh_code_postal'] . " " .  $unAdherent['adh_ville'] . " </td>
+				echo
+					"<tr id='adherent_" . $unAdherent['adh_id'] . "' >" .
+						"<td> " . strtoupper($unAdherent['adh_famille']['fam_libelle']) . " </td>";
+					
+					
+						// Affichage des contacts
+						echo "<td style='text-align:center;width:100%'> <table class='tableau-interne'>";
+						
+						if($unAdherent['adh_contacts']){			// Condition juste pour le cas où l'adhérent n'a pas de contact... cas qui n'arrivera pas avec des vraies données
+							
+							foreach($unAdherent['adh_contacts'] as $unContact){
+								$idLienContact = $unContact['con_lien_parente'];
+								$idTypeContact = $unContact['con_type'];
+								
+								echo
+									"<tr>" .
+										"<td style='width:35%'>" . ucfirst($this->viewvar['lien_parente'][$idLienContact]['lie_libelle'] ) . "</td>" .
+										"<td style='width:20%'>" . $this->viewvar['type_contact'][$idTypeContact]['typ_libelle'] . "</td>" .
+										"<td style='width:45%'>" . $unContact['con_contact'] . "</td>" .
+									"</tr>";
+							}
+						}
+						
+						
+						echo "</table> </td>";
+				
+				echo "		
+						<td style='text-align:left;'> "
+							. $unAdherent['adh_adresse_postale'] . "<br/>"
+							. $unAdherent['adh_code_postal'] . " "
+							.  $unAdherent['adh_ville'] . "
+						</td>
+						
 						<td> " . $unAdherent['adh_nom'] . " </td>
 						<td> " . $unAdherent['adh_prenom'] . " </td>
 						<td> " . ucfirst($unAdherent['adh_position']['pos_libelle']) . " </td>
 						<td> " . date_ToFR($unAdherent['adh_date_naissance']) . " </td>
-						<td> " . "42" . " </td>
+						<td> " . "TODO..." . " </td>
 						<td> " . $unAdherent['adh_genre'] . " </td>
 						<td> ";
 
 				$idAdherent = $unAdherent['adh_id'];
-				echo ucfirst($unAdherent['adh_ceinture'] ?? "N/A");		// Afficher la ceinture s'il y a, sinon 'N/A'
+				echo ucfirst($unAdherent['adh_ceinture']['cei_libelle'] ?? "N/A");		// Afficher la ceinture s'il y a, sinon 'N/A'
 				
 				echo	" </td>
-						<td> " .
-						
-						($unAdherent['adh_certificat_medical'] ?
-							"Oui" : "Non") . " </td>
-						
-						<td> " .
-						
-						($unAdherent['adh_licence'] ?
-							$unAdherent['adh_licence_numero'] : "N/A") .
-							
+						<td> " . ($unAdherent['adh_certificat_medical'] ? "Oui" : "Non") . " </td>
+						<td> " . ($unAdherent['adh_licence'] ? $unAdherent['adh_licence_numero'] : "N/A") .
 						" </td>";
-						
-						if($debug){
-							echo
-							"<td> "
-							. $this->viewvar['suivre'][$i]['sui_saison'] . ", "
-							. $this->viewvar['suivre'][$i]['sui_adherent']['adh_id'] . ", "
-							. $this->viewvar['suivre'][$i]['sui_cours']['cou_id'] . "
-							</td>";
-						}
 						
 						echo "
 					</tr>

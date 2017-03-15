@@ -6,7 +6,7 @@
 /* TABLEAUX, LIGNES ET CELLULES */
 
 
-table{
+table:not(.tableau-interne){
 	width:100%;
 	font-size:105%;
 	

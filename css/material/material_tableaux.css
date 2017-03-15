@@ -7,26 +7,22 @@
 
 
 
-table{
+table:not(.tableau-interne){
 	width:100%;
 	font-size:105%;
 	
 }
 
-tr{
-	
-}
-th, td{
-	padding:0.5em 1.0em;
-	line-height:1.5em;
-}
 
 th{
+	padding:0.5em 0.75em;
+	line-height:1.5em;
 	font-size:90%;
 	color: <?php echo $col['text']['grey']; ?>;
 }
 
-td{
+
+table td{
 	border-top-style:solid;
 	border-top-color:<?php echo $col['separator'] ; ?>;
 	border-top-width:<?php echo $border['size']; ?>;
@@ -35,6 +31,32 @@ td{
 
 
 
+.tableau-interne{
+	width:25vw;
+	font-size:85%;
+}
+.tableau-interne td{
+	line-height:1.0em;
+	border:none;
+}
+
+
+
 td.gris{
 	color: <?php echo $col['text']['grey']; ?>;
+}
+
+
+table{
+	/* background:linear-gradient(to top, pink, cyan); */
+}
+tr{
+	/* background:linear-gradient(to right, red, green); */
+}
+td{
+	/* background:linear-gradient(to bottom, yellow, lightblue); */
+	padding:0.5em;
+	text-align:center;
+	
+	white-space:nowrap;
 }

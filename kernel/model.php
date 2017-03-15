@@ -216,7 +216,7 @@ abstract class Model{
 		
 		$reqIns = "INSERT INTO {$this->table} ($listeProprietes) VALUES ($listeValeurs)";
 		
-		echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
+		// echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
 		
 		
 		
