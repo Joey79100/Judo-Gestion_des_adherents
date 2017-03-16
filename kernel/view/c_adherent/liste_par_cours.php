@@ -11,8 +11,8 @@
 	if($_SESSION['saison']['debut'] != getSaisonActuelle()[0]){
 		echo "
 			<div class='window'>
-				<h1> Note </h1>
-				Vous consultez la liste des adhérents de la saison " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'] . ".<br/><br/>
+				<div class='title'> Note </div>
+				Vous consultez la liste des inscriptions aux cours de la saison " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'] . ".<br/><br/>
 				
 				<div class='form-boutons'>
 					<form id='retourPresent' method='post' style='display:none'>
@@ -43,7 +43,7 @@
 		
 		echo "<div class='window'>
 			<span>
-				<h1 class='div_cours_titre' id='div_cours_titre_" . $unCours['cou_id'] . "'>" . $unCours['cou_libelle'] . "</h1>
+				<h1 class='div_cours_titre' id='div_cours_titre_" . $unCours['cou_id'] . "'>" . $unCours['cou_libelle'] . "</div>
 				<button type='button' id='div_cours_" . $unCours['cou_id'] . "_button' class='boutonOuvertureCours'>-</button>
 			</span>
 			
@@ -174,7 +174,7 @@
 <?php
 	// echo "
 		// <div class='window'>
-			// <h1>Statistiques</h1>
+			// <div class='title'>Statistiques</div>
 			// Nombre de cours : " . $nbCours . "<br/>
 			// Nombre d'adhérents : " . $i . "<br/>
 		// </div>

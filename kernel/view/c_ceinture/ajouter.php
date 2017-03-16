@@ -1,5 +1,5 @@
 <div class='window'>
-	<h1> Ajouter une ceinture </h1>
+	<div class='title'> Ajouter une ceinture </div>
 	
 	<table class='ceintures'>
 		<tr>

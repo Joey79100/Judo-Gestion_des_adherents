@@ -170,7 +170,7 @@ body{
 
 
 /* TITRES */
-h1,
+.title,
 legend{
 	width:100%;
 	margin-bottom:0.5em;
@@ -186,7 +186,7 @@ legend{
 
 
 
-h1{
+.title{
 	display:block;
 	font-size:200%;
 	font-weight: bold;

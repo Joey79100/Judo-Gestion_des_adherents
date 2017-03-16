@@ -1,6 +1,6 @@
 
 <div class='window'>
-	<h1>Adhérent</h1>
+	<div class='title'>Adhérent</div>
 
 	<ul>
 		<li>

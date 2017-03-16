@@ -6,7 +6,7 @@
 
 
 /* TITRES */
-h1{
+.title{
 	width:calc(100% + 2.35em);
 	margin:-1.45em;
 	margin-bottom:1.5em;
@@ -19,7 +19,7 @@ h1{
 
 
 
-h1{
+.title{
 	display:block;
 	font-size:inherit;
 	font-weight: bold;

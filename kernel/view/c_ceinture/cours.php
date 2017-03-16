@@ -1,7 +1,7 @@
 <?php
 	$debug = false;
 	$debug = true;
-	// echo "<div class='window' style='background:#ccf;'><h1>\$this->viewvar['inscription']</h1>";
+	// echo "<div class='window' style='background:#ccf;'><div class='title'>\$this->viewvar['inscription']</div>";
 	// echo "<pre> ";
 	// print_r($this->viewvar['inscription']);
 	// echo "</pre>";
@@ -33,7 +33,7 @@
 		$cours     = $this->viewvar['inscription'][$i]['sui_cours']['cou_id'];
 		
 		echo "<div class='window'>
-			<h1>" . $this->viewvar['inscription'][$i]['sui_cours']['cou_libelle'] . "</h1>
+			<div class='title'>" . $this->viewvar['inscription'][$i]['sui_cours']['cou_libelle'] . "</div>
 		
 			<table class='liste_adherents'>	
 			

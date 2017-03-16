@@ -1,9 +1,9 @@
 ﻿<div class='window'>
-	<h1>
+	<div class='title'>
 	<?php
 		echo "Erreur (" . strtoupper($this->viewvar['erreur']['type']) . ")";
 	?>
-	</h1>
+	</div>
 	
 	<?php 
 		echo "<div class='detail-erreur'> <table>   <th colspan='2'>Détail de l'erreur</th>";

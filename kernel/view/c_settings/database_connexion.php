@@ -6,7 +6,7 @@
 	}
 ?>
 <div class='window'>
-	<h1>Connexion réussie</h1>
+	<div class='title'>Connexion réussie</div>
 	
 	<p style='text-align:center;'>La connexion a la base de données a réussi.</p>
 	

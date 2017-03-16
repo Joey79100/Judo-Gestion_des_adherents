@@ -1,5 +1,5 @@
 <div class='window'>
-	<h1>Voilà le contenu du site</h1>
+	<div class='title'>Voilà le contenu du site</div>
 	<p>Bienvenue ou pas bienvenue, balais-couilles. Nous sommes dans une société civilisée certes mais y a des limites.</p>
 	<p>Sinon, fait froid dehors, c'est nul.</p>
 	<p>Tiens, puis v'là <a href='testinterface_form'>un lien</a> pour euh... pour... lier, vois-tu...</p>

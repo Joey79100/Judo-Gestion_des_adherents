@@ -1,6 +1,6 @@
 <div class='window'>
 
-	<h1>Opérations courantes</h1>
+	<div class='title'>Opérations courantes</div>
 	
 	Page de test de l'interface avec formulaire : <a href='accueil/testinterface_form'>Cliquer ici</a>
 	<br/>

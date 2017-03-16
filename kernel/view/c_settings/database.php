@@ -6,7 +6,7 @@
 	}
 ?>
 <div class='window'>
-	<h1>Paramètres de la base de données</h1>
+	<div class='title'>Paramètres de la base de données</div>
 	<form method='post' action='database_connexion'>
 		<fieldset>
 			<legend>Localisation de la base</legend>

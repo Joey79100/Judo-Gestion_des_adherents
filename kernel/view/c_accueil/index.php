@@ -1,5 +1,5 @@
 <div class='window'>
-	<h1>Travailler sur la saison</h1>
+	<div class='title'>Travailler sur la saison</div>
 	<form id='formsaison' method='post' style='display:none;'></form>
 		<label for='saison' form='formsaison'>Saison :</label>
 		<select name='saison' form='formsaison'>
@@ -29,7 +29,7 @@
 </div>
 
 <div class='window'>
-	<h1>Opérations courantes</h1>
+	<div class='title'>Opérations courantes</div>
 	
 	Page de test de l'interface avec formulaire : <a href='accueil/testinterface_form'>Cliquer ici</a>
 	<br/>

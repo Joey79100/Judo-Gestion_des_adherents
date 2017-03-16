@@ -18,7 +18,7 @@
 	
 	
 	<div class='window'>
-		<h1>Changer l'apparence de l'application</h1>
+		<div class='title'>Changer l'apparence de l'application</div>
 		<hr/>
 		<br/>
 		<form method='post' action='theme'>
@@ -85,7 +85,7 @@
 	if (file_exists($conf_theme)){			// Si le thème possède une page de configuration
 		echo "
 			<div class='window'>
-			<h1>Paramètres du thème '" . $theme_actuel . "'</h1>";
+			<div class='title'>Paramètres du thème '" . $theme_actuel . "'</div>";
 			
 			require_once ($conf_theme);		// Alors l'inclure dans la page
 
