@@ -6,8 +6,8 @@
 		
 		
 		
-		public function __construct($lesModel, $layout = "default"){
-			foreach($lesModel as $unModel){
+		public function __construct($lesModels, $layout = "default"){
+			foreach(makeArray($lesModels) as $unModel){
 				$this->loadModel($unModel);
 			}
 			$this->layout = $layout;

@@ -37,7 +37,7 @@
 			$this->set(array('position' => $this->position->find()));
 			$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
 			$this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
-			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", null, array("position"), 2)));
+			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", null, "position", 2)));
 			
 			$this->render("ajout_modif");
 		}
@@ -223,7 +223,7 @@
 				
 				$this->adherent->setAdh_id($adh_id);
 				$this->set(array('adherent' => $this->adherent->read(null, 2)));
-				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
+				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, 'adherent', 2)));
 				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id)[0]));
 				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1)[0]));
 				
@@ -470,7 +470,7 @@
 						
 						// --- Récupération des contacts ---
 						
-						$tousLesContactsDeLadherent = $this->contact->find("con_adherent = " . $idAdherent, null, null, array('adherent'), null);
+						$tousLesContactsDeLadherent = $this->contact->find("con_adherent = " . $idAdherent, null, null, 'adherent', null);
 						if($tousLesContactsDeLadherent){
 							foreach($tousLesContactsDeLadherent as $unContact){
 								$lesContacts[] = $unContact;

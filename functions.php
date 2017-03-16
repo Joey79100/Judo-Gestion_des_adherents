@@ -6,8 +6,8 @@
 		$erreur->balancer($exception, $type, $infosAdditionnelles);
 	}
 	
-		
-		
+	
+	
 	/*	
 	 *	Source : http://stackoverflow.com/questions/3472836/how-to-update-an-ini-file-with-php
 	 *	@author mtoloo
@@ -31,6 +31,7 @@
 	}
 	
 	
+	
 	/*
 	 *	
 	 */
@@ -48,6 +49,7 @@
 		
 		return array($debut, $fin);
 	}
+	
 	
 	
 	/*
@@ -93,5 +95,28 @@
 		$age = $dateNaissance->diff($dateDuJour)->y;
 		
 		return($age);
+	}
+
+	
+	
+	/*
+	 * makeArray() - Si l'élément n'est pas un tableau, alors retourne le même élément, mais dans un tableau
+	 */
+	function makeArray($element){
+		
+		// Si l'élément est null, alors on retourne un tableau vide
+		if($element === null){
+			$return = array();
+		}else{
+			// Sinon, si l'élément n'est juste pas un tableau, alors on retourne un tableau avec l'élément
+			if(!is_array($element)){
+				$return = array($element);
+			}else{
+				// Sinon, c'est que l'élément est déjà un tableau, dans ce cas on le retourne, tout simplement
+				$return = $element;
+			}
+		}
+		
+		return $return;
 	}
 ?>

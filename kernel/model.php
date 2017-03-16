@@ -16,8 +16,6 @@ abstract class Model{
 	
 	
 	
-	
-	
 	/*
 	* __construct -	Construit l'objet.
 	*
@@ -32,9 +30,9 @@ abstract class Model{
 	*/
 	public function __construct($nomTable, $clePrimaire, $autoIncrementOuNon, $fk){
 		$this->table = $nomTable;
-		$this->pk = $clePrimaire;
+		$this->pk = makeArray($clePrimaire);
 		$this->estAutoIncrement = $autoIncrementOuNon;
-		$this->fk = $fk;
+		$this->fk = makeArray($fk);
 		$this->attribtech = array('table', 'pk', 'estAutoIncrement', 'fk', 'attribtech');
 	}
 	
@@ -50,22 +48,31 @@ abstract class Model{
 	* doBelongsToAssoc - Pour chaque clé étrangère de l'objet courant, créée un objet y correspondant et le peuple avec les données associées.
 	*/
 	private function doBelongsToAssoc($lectures, $clesOmises = array()){
-		// $i = 0;		// Utilisé uniquement pour compter le nombre de read fait dans le foreach quand on affiche le détail à l'écran
+		$i = 0;		// Utilisé uniquement pour compter le nombre de read fait dans le foreach quand on affiche le détail à l'écran...
+		
 		$lectures--;
 		
 		if(isset($lectures) && $lectures > -1){
-			// echo "<div style='background-color:#a98;margin:20px;padding:20px;border:solid black 3px;'>";
+			
+			echo "<div style='background-color:#a98;margin:20px;padding:20px;border:solid black 3px;'>";
+			echo "\$this->fk : <br/><pre>";
+			print_r($this->fk);
+			echo "</pre>";
+			
 			foreach($this->fk as $cle=>$valeur){	// Pour chaque clé étrangère que la table possède
-				// $i++;
-				// echo "doBelongsToAssoc : <b><i><font color='#0ff' size='6'>" . $lectures . "</font></i></b>, table n°" . $i;
+				$i++;
+				echo "doBelongsToAssoc : <b><i><font color='#0ff' size='6'>" . $lectures . "</font></i></b>, table n°" . $i;
+				
 				if(!in_array($cle, $clesOmises)){
 					$id = $this->$valeur;				// Alors on récupère la valeur de la clé étrangère en question
 					$this->$valeur = new $cle();		// On crée un objet de type Adhérent, ou Sujet, ou... enfin ce qui est noté dans $cle (un nom de table)...
-					// echo "<br/>model::doBelongsToAssoc() -> \$valeur : " . $valeur . " / \$id : " . $id;
+					
+					echo "<br/>model::doBelongsToAssoc() -> \$valeur : " . $valeur . " / \$id : " . $id;
+					
 					$this->$valeur->read($id, $lectures);			// ... et on y insère les données qui correspondent à cette clé étrangère en faisant une requête sur son ID
 				}
 			}
-			// echo "</div>";
+			echo "</div>";
 			return $lectures;
 		}
 	}
@@ -193,7 +200,7 @@ abstract class Model{
 			*  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça,
 			*  elle ne sera pas ajoutée dans la requête
 			*/
-			$this->attribtech[] = $this->pk;
+			$this->attribtech[] = $this->pk[0];
 		}
 		
 		/*
@@ -230,7 +237,7 @@ abstract class Model{
 		 * et on l'affecte à la propriété [clé primaire] de l'objet
 		 */
 		if($this->estAutoIncrement){
-			$this->{$this->pk} = $base->lastInsertId($this->table . "_" . $this->pk . "_seq");
+			$this->{$this->pk[0]} = $base->lastInsertId($this->table . "_" . $this->pk[0] . "_seq");
 		}
 		
 		$base = null;
@@ -254,33 +261,24 @@ abstract class Model{
 		// echo "<hr/><b><font color='blue'>ENTREE DANS model::ecrireClePrimaire()</font></b><br/>";
 		
 		
-		/*
-		 * Va VRAIMENT falloir trouver quelque chose de plus simple là, c'est tout-à-fait possible, faut juste le faire...
-		 * Parce que là c'est COMPLETEMENT DEGUEULASSE, y a 36 IFs en vrac alors que tout pourrait est adapté avec une seule façon
-		 * de traiter les données...
-		 *
-		 * Par exemple, plutôt que de traiter la clé primaire simple en priorité et ensuite traiter le cas où on aurait plutôt
-		 * une clé composée, on pourrait faire un seul traitement : traiter la clé comme une clé composée, mais si on avait une
-		 * clé simple en fait, alors on la met juste dans un tableau afin qu'elle soit traitée comme une clé composée... Ca sera
-		 * bien plus simple.
-		 */
-		
 		
 		// Si la clé primaire n'a pas été fournie
-		if($id == null){
-			// Alors on va lire celle qui est enregistrée...
+		// if($id == null){
+			// // Alors on va lire celle qui est enregistrée...
 			
 			
-			if(is_array($this->pk)){
-				// ... mais si la clé primaire est un tableau (cas des clés composées), alors on va prendre l'objet entier, puisque de toutes
-				// façons, avec une clé primaire composée, on va simplement chercher les clés qui nous intéressent dans l'objet fourni....
-				$id = $this->toTableau();
-			}else{
-				// ... alors que si on a une clé primaire simple, on va simplement récupérer sa valeur
-				$id = $this->{$this->pk};
-			}
-		}
+			// if(is_array($this->pk)){
+				// // ... mais si la clé primaire est un tableau (cas des clés composées), alors on va prendre l'objet entier, puisque de toutes
+				// // façons, avec une clé primaire composée, on va simplement chercher les clés qui nous intéressent dans l'objet fourni....
+				$id = makeArray($id);
+			// }else{
+				// // ... alors que si on a une clé primaire simple, on va simplement récupérer sa valeur
+				// $id = $this->{$this->pk[0]};
+			// }
+		// }
 		
+		echo "<br/><b>model::ecrireClePrimaire() -> \$id :</b> ";
+		var_dump($id);
 		
 		
 		
@@ -288,25 +286,41 @@ abstract class Model{
 		
 		$req = "";
 		
-		if(is_array($this->pk)){								// Cas d'une clé primaire composée
+		// if(is_array($this->pk)){								// Cas d'une clé primaire composée
 		
 			// if(is_array($id)){
 				
 				foreach($this->pk as $uneClePrimaire){
+					echo "\$req .= \$uneClePrimaire . \" = \" . \$id[\$uneClePrimaire] . \" AND \";" . "<br/>";
+					
+					echo "<div style='padding:0.5em; color:green; background:#aff;'>";
+					
+						
+						echo "<b>\$uneClePrimaire : <br/></b>";
+						echo "<pre>"; print_r($uneClePrimaire); echo "</pre>";
+						
+						echo "<b>\$id : <br/></b>";
+						echo "<pre>"; print_r($id); echo "</pre>";
+						
+						echo "<b>\$uneClePrimaire : <br/></b>";
+						echo "<pre>"; print_r($uneClePrimaire); echo "</pre>";
+						
+					echo "</div>";
+					
 					$req .= $uneClePrimaire . " = " . $id[$uneClePrimaire] . " AND ";
 				}
-				$req = substr($req, 0, -4); // Pour enlever le denier 'AND' inutile de la requête
+				$req = substr($req, 0, -4); // On retire le denier 'AND' inutile de la requête
 				
 			// }else{
 				// die("<br/><font color='darkred'>model::ecrireClePrimaire -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
 			// }
-		}else{													// Cas d'une clé primaire classique
-			if(is_array($id)){
-				$req .= $this->pk . " = " . $id[0];
-			}else{
-				$req .= $this->pk . " = " . $id;
-			}
-		}
+		// }else{													// Cas d'une clé primaire classique
+			// if(is_array($id)){
+				// $req .= $this->pk . " = " . $id[0];
+			// }else{
+				// $req .= $this->pk . " = " . $id;
+			// }
+		// }
 		
 		echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
 		
@@ -322,6 +336,7 @@ abstract class Model{
 	
 	
 	
+	
 	/*
 	* lineExist - Vérifie si l'enregistrement d'ID spécifié en paramètre est présent dans la base en lisant la ligne y correspondant.
 	*			Retourne faux si la ligne n'existe pas, sinon retourne un tableau avec les données de l'enregistrement.
@@ -329,7 +344,7 @@ abstract class Model{
 	* @return	Tableau
 	*/
 	public function lineExist($id){
-		// echo "<br/>ENTREE DANS model::lineExist()";
+		echo "<div style='border:darkgrey 3px solid;padding:0.5em;'>ENTREE DANS model::lineExist()";
 		
 		// echo "<br/><b>model::lineExist() -> \$id -> :</b><pre>";
 		// print_r($id);
@@ -337,7 +352,7 @@ abstract class Model{
 		
 		$requete = "SELECT * FROM {$this->table} WHERE " . $this->ecrireClePrimaire($id);
 		
-		// echo "<br/><b>model::lineExist() -> \$requete :</b> " . $requete . "<br/>";
+		echo "<br/><b>model::lineExist() -> \$requete :</b> " . $requete . "<br/>";
 		
 		
 		
@@ -354,6 +369,7 @@ abstract class Model{
 		 * Sinon on retourne simplement false.
 		 */
 		
+		echo "</div>";
 		
 		return($ligne);
 	}
@@ -379,18 +395,28 @@ abstract class Model{
 	* @return	Tableau à deux dimensions : [<nomcolonne>][<valeurcolonne>]
 	*/
 	public function read($id = null, $profondeurRecherche = -1, $clesOmises = array()){
-		// echo "<br/><div style='margin:1em;background:linear-gradient(to bottom, lightgrey, grey);'>ENTREE DANS model::read()";
+		$clesOmises = makeArray($clesOmises);
+		
+		echo "<br/><div style='margin:1em;background:linear-gradient(to bottom, #ddd, #777); padding:1em;font-size:85%;'>ENTREE DANS model::read()";
+		
+		
+		
+		// Si l'ID n'a pas été fourni, alors on regardera l'ID enregistré dans l'objet
 		
 		if(is_null($id)){
 			$id = $this->{$this->pk};
 			// echo "L'ID : " . $this->{$this->pk};
 			// var_dump($this);
 		}
-		// echo "<br/><b>model::read() -> $this->table \$id -> :</b><pre>";
-		// print_r($id);
-		// echo "</pre></br>";
+		
+		
+		echo "<br/><b>model::read() -> " . $this->table . " \$id -> :</b><pre>";
+		var_dump($id);
+		echo "</pre></br>";
+		
 		
 		$resultat = $this->lineExist($id);
+		
 		
 		// if($resultat){
 			// $requete = $this->ecrireRequeteRead($id);
@@ -431,14 +457,16 @@ abstract class Model{
 				
 				
 			}
-				// echo "<br/><b>objet :</b><pre>";
-				// print_r($this);
-				// echo "</pre><br/>";
+			
+			echo "<br/><b>\$resultat :</b><pre>";
+			var_dump($resultat);
+			echo "</pre><br/>";
+			
 		}else{
 			die("Enregistrement introuvable !");
 		}
 		
-		// echo "<br/>SORTIE DE model::read()</div>";
+		echo "<br/>SORTIE DE model::read()</div>";
 		return $resultat;
 	}
 	
@@ -454,18 +482,22 @@ abstract class Model{
 	* find -	Lance une recherche de plusieurs enregistrements et leurs clés étrangères associées en fonction des critères spécifiés.
 	*			
 	*
-	* @param	$condition				Spécifie la condition de la recherche (WHERE...)
-	* @param	$ordre					Spécifie le tri des résultats (ORDER BY...)
-	* @param	$nbresultats			Limite le nombre de résultats retournés (limit)
-	* @param	$clesAOmettre			Indiquer quelles clés étrangères ne nous intéressent pas pour raccourcir la recherche
-	* @param	$profondeurRecherche	Spécifie à quelle 'pronfondeur' rechercher les clés étrangères dans la base. En gros ça indique
+	* @param	$condition				Chaine : Spécifie la condition de la recherche (WHERE...)
+	* @param	$ordre					Chaine : Spécifie le tri des résultats (ORDER BY...)
+	* @param	$nbresultats			Entier : Limite le nombre de résultats retournés (limit)
+	* @param	$clesAOmettre			Chaine ou Tableau: Indiquer quelles clés étrangères ne nous intéressent pas pour raccourcir la recherche
+	* @param	$profondeurRecherche	Entier : Spécifie à quelle 'pronfondeur' rechercher les clés étrangères dans la base. En gros ça indique
 	*									jusqu'à combien de clés étrangères récupérées on arrête de chercher les clés étrangères des tables
 	*									étrangères déjà récupérées.
 	*
-	* @return	Tableau des enregistrements correspondant à la requête
+	* @return	Tableau : Enregistrements correspondant à la requête
 	*/
 	public function find($condition = null, $ordre = null, $nbresultats = null, $clesAOmettre = array(), $profondeurRecherche = -1){
-		// echo "<hr/>ENTREE DANS $this->table::find()";
+		$clesAOmettre = makeArray($clesAOmettre);
+		
+		echo "<div style='linear-gradient(to bottom, #ddd, #888); border:black 2px solid; padding:2em; margin:3px;'>";
+		echo "<hr/>ENTREE DANS " . $this->table . "::find()";
+		
 		
 		if($clesAOmettre != null){
 			$clesOmises = array_merge($clesAOmettre, $this->attribtech);	// Pour raccourcir la recherche dans la base on peut préciser quelles clés étrangères ne pas chercher
@@ -516,21 +548,21 @@ abstract class Model{
 		// print_r($tableau);
 		// echo "</pre>";
 		
-		// $i = 0;
+		$i = 0;
 		if($tableau){						// On vérifie si la requête nous a bien retourné quelque chose
 			while ($result = $tableau->fetch()){
-				// $i++;
-				// echo "<div style='background-color:#bbb;margin:20px;padding:20px;'> <h2>Fetch n°" . $i . "</h2>";
-				// echo "<b>model::find() : \$result :</b> <pre>";
-				// print_r($result);
-				// echo "</pre>";
+				$i++;
+				echo "<div style='background-color:#bbb;margin:20px;padding:20px;'> <h2>Fetch n°" . $i . "</h2>";
+				echo "<b>model::find() : \$result :</b> <pre>";
+				print_r($result);
+				echo "</pre>";
 				
 				
 				$objet = new $this->table;
 				$objet->read($result, $profondeurRecherche, $clesOmises);
 				$tab[] = $objet->toTableau($clesOmises);
 				
-				// echo "</div>";
+				echo "</div>";
 			}
 			$tableau->closeCursor();
 		}
@@ -544,7 +576,8 @@ abstract class Model{
 		// echo "</pre></div>";
 		
 		
-		// echo "<br/>SORTIE DE model::find()";
+		echo "<br/>SORTIE DE model::find()";
+		echo "</div>";
 		return $tab;
 	}
 	
@@ -603,7 +636,7 @@ abstract class Model{
 			 *  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça, elle ne sera pas ajoutée dans la requête (enfin pas dans la partie SET)
 			 */
 			
-			$this->attribtech[] = $this->pk;
+			$this->attribtech[] = $this->pk[0];
 		}
 		
 		
@@ -664,7 +697,6 @@ abstract class Model{
 	
 	
 	
-	
 	/*
 	* delete -	Supprime l'enregistrement de la base correspondant à l'objet courrant
 	*/
@@ -677,6 +709,7 @@ abstract class Model{
 		$base->query($req);
 		$base = null;
 	}
+	
 	
 	
 	
