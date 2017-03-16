@@ -33,8 +33,8 @@
 			$this->set(array('lien_parente' => $this->lien_parente->find()));
 			$this->set(array('type_contact' => $this->type_contact->find()));
 			$this->set(array('position' => $this->position->find()));
-			$this->set(array('cours' => $this->cours->find()));
-			$this->set(array('ceinture' => $this->ceinture->find()));
+			$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
+			$this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
 			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", null, array("position"), 2)));
 			
 			$this->render("ajout_modif");
@@ -215,8 +215,8 @@
 				$this->set(array('lien_parente' => $this->lien_parente->find()));
 				$this->set(array('type_contact' => $this->type_contact->find()));
 				$this->set(array('position' => $this->position->find()));
-				$this->set(array('cours' => $this->cours->find()));
-				$this->set(array('ceinture' => $this->ceinture->find()));
+				$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
+				$this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
 				
 				$this->adherent->setAdh_id($adh_id);
 				$this->set(array('adherent' => $this->adherent->read(null, 2)));

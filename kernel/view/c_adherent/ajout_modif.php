@@ -8,7 +8,7 @@
 	$modif = !is_null($this->adherent->getAdh_id());
 	
 	$action = $modif ? "Modifier" : "Ajouter";
-	echo "<h1>" . $action . " un adhérent : Saison " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'] . "</h1>";
+	echo "<div class='title'>" . $action . " un adhérent : Saison " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'] . "</div>";
 	
 	
 	if(!$modif){
@@ -224,12 +224,14 @@
 						Licence
 					</label>
 					<input name='licence_numero' type='text' placeholder='Numéro de licence' ";
-	
+					
+					
+					// Le numéro de licence étant unique, on bloque sa modification si le membre en possède déjà une
 					if($modif && isset($this->viewvar['adherent']['adh_licence_numero'])){
 						echo "disabled value='" . $this->viewvar['adherent']['adh_licence_numero'] . "' ";
 					}
 					
-	echo "		/>
+	echo "			/>
 				
 				</div>
 				
@@ -244,6 +246,7 @@
 					<label for='position' class='libelle'>Position</label>
 					<select name='position' id='position' class='largeur-100'>";
 					
+					// Création de la liste des positions
 					foreach($this->viewvar['position'] as $position){
 						echo "<option value='" . $position['pos_id'] . "' ";
 						
@@ -264,8 +267,9 @@
 					<label for='cours' class='libelle'>Cours suivi</label>
 					<select name='cours' id='cours' class='largeur-100'>";
 					
+					// Création de la liste des cours
 					foreach($this->viewvar['cours'] as $cours){
-						echo "<option value='" . $cours['cou_id'] . "' ";
+						echo "<option value='" . $cours['cou_id'] . "' data-age='" . $cours['cou_age'] . "' ";
 						
 						if($modif && $cours['cou_id'] == $this->viewvar['suivre']['sui_cours']){				// TODO: Récupérer le cours auquel l'adhérent est inscrit
 							echo "selected";
@@ -285,9 +289,10 @@
 				<div class='form-tiers-3'>
 					<label for='cours' class='libelle'>Ceinture</label>
 					<select name='ceinture' id='ceinture' class='largeur-100'>";
-					
+						
+						// Création de la liste des ceintures
 						foreach($this->viewvar['ceinture'] as $ceinture){
-							echo "<option value='" . $ceinture['cei_id'] . "' ";
+							echo "<option value='" . $ceinture['cei_id'] . "' data-age ='" . $ceinture['cei_age_mini'] . "' ";
 							
 							if($modif && $ceinture['cei_id'] == $this->viewvar['passer']['pas_ceinture']){
 								echo " selected";
@@ -308,6 +313,9 @@
 					
 					if($modif){
 						echo " value='" . date_toFR($this->viewvar['passer']['pas_date']) . "' ";
+					}else{
+						$dateDuJour = new DateTime();
+						echo " value='" .$dateDuJour->format('j/m/Y') . "' ";
 					}
 					
 					echo "
@@ -337,7 +345,39 @@
 
 
 
+?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
 
 
 
@@ -374,9 +414,9 @@
 			// </script>" ;
 	
 	// Puis appel du fichier contact.js
-	echo "	<script type='text/javascript' src='" . JS . "adherent/ajout/contact.js" . "'></script>" ;
+	echo "	<script type='text/javascript' src='" . JS . "adherent/ajout-modif/contact.js" . "'></script>" ;
 	
-	echo "	<script type='text/javascript' src='" . JS . "adherent/ajout/submit.js" . "'></script>" ;
+	echo "	<script type='text/javascript' src='" . JS . "adherent/ajout-modif/submit.js" . "'></script>" ;
 	
 	
 	
@@ -499,7 +539,7 @@
 			</script>" ;
 
 	// Appel du script d'autocomplétion
-	echo "	<script src= '" . JS . "adherent/ajout/autocomp.js'></script>";
+	echo "	<script src= '" . JS . "adherent/ajout-modif/autocomp.js'></script>";
 
 
 	
@@ -534,6 +574,19 @@
 	}
 	echo "</script>";
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Appel du script de vérification du formulaire
+	// echo "	<script src= '" . JS . "adherent/ajout-modif/verif.js'></script>";
 	
 	
 	
