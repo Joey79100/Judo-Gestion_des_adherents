@@ -206,7 +206,7 @@ abstract class Model{
 			if(!in_array($unNomColonne, $this->attribtech) && !is_null($uneValeurColonne)){
 				// Pour la requete d'insertion :
 				$listeProprietes .= $unNomColonne . " ,";
-				$listeValeurs .= $this->formaterEnSQL($uneValeurColonne) . " ,";
+				$listeValeurs .= $this->formaterChaineEnSQL($uneValeurColonne) . " ,";
 			}
 		}
 		
@@ -216,7 +216,7 @@ abstract class Model{
 		
 		$reqIns = "INSERT INTO {$this->table} ($listeProprietes) VALUES ($listeValeurs)";
 		
-		// echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
+		echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
 		
 		
 		
@@ -245,35 +245,70 @@ abstract class Model{
 	
 	/*
 	* ecrireClePrimaire - Ecrit la partie "WHERE ..." d'un requête pour laquelle on a besoin de chercher la clé primaire (read, delete, ou update).
+	* 
+	* @param	La valeur de la clé primaire à écrire, sous forme de chaîne, ou bien de tableau si clé primaire composée.
 	*
 	* @return	Chaîne 
 	*/
-	private function ecrireClePrimaire($id){
+	private function ecrireClePrimaire($id = null){
 		// echo "<hr/><b><font color='blue'>ENTREE DANS model::ecrireClePrimaire()</font></b><br/>";
+		
+		
+		/*
+		 * Va VRAIMENT falloir trouver quelque chose de plus simple là, c'est tout-à-fait possible, faut juste le faire...
+		 * Parce que là c'est COMPLETEMENT DEGUEULASSE, y a 36 IFs en vrac alors que tout pourrait est adapté avec une seule façon
+		 * de traiter les données...
+		 *
+		 * Par exemple, plutôt que de traiter la clé primaire simple en priorité et ensuite traiter le cas où on aurait plutôt
+		 * une clé composée, on pourrait faire un seul traitement : traiter la clé comme une clé composée, mais si on avait une
+		 * clé simple en fait, alors on la met juste dans un tableau afin qu'elle soit traitée comme une clé composée... Ca sera
+		 * bien plus simple.
+		 */
+		
+		
+		// Si la clé primaire n'a pas été fournie
+		if($id == null){
+			// Alors on va lire celle qui est enregistrée...
+			
+			
+			if(is_array($this->pk)){
+				// ... mais si la clé primaire est un tableau (cas des clés composées), alors on va prendre l'objet entier, puisque de toutes
+				// façons, avec une clé primaire composée, on va simplement chercher les clés qui nous intéressent dans l'objet fourni....
+				$id = $this->toTableau();
+			}else{
+				// ... alors que si on a une clé primaire simple, on va simplement récupérer sa valeur
+				$id = $this->{$this->pk};
+			}
+		}
+		
+		
+		
+		
+		
 		
 		$req = "";
 		
 		if(is_array($this->pk)){								// Cas d'une clé primaire composée
 		
-			if(is_array($id)){
+			// if(is_array($id)){
 				
 				foreach($this->pk as $uneClePrimaire){
-					$req = $req . $uneClePrimaire . " = " . $id[$uneClePrimaire] . " AND ";
+					$req .= $uneClePrimaire . " = " . $id[$uneClePrimaire] . " AND ";
 				}
 				$req = substr($req, 0, -4); // Pour enlever le denier 'AND' inutile de la requête
 				
-			}else{
-				die("<br/><font color='darkred'>model::ecrireClePrimaire -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
-			}
+			// }else{
+				// die("<br/><font color='darkred'>model::ecrireClePrimaire -> ERREUR : la clé primaire fournie devrait être un tableau, mais il a été fourni une simple chaîne.</font><br/>");
+			// }
 		}else{													// Cas d'une clé primaire classique
 			if(is_array($id)){
-				$req = $req . $this->pk . " = " . $id[0];
+				$req .= $this->pk . " = " . $id[0];
 			}else{
-				$req = $req . $this->pk . " = " . $id;
+				$req .= $this->pk . " = " . $id;
 			}
 		}
 		
-		// echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
+		echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
 		
 		
 		// echo "<br/><b><font color='blue'>SORTIE DE model::ecrireClePrimaire()</font></b><hr/>";
@@ -369,9 +404,8 @@ abstract class Model{
 			
 			/*
 			 * OPTIMISATION :
-			 * La partie ci-dessus est volontairement commentée : comme on a déjà fait une requête dans le lineExist,
-			 * on récupère directement ce qu'il nous a retourné puisque la requête aurait été identique. Ca fait une
-			 * requête de moins à faire comme ça.
+			 * La partie ci-dessus est volontairement commentée : avec le lineExist, on fait déjà exactement la même requête.
+			 * Alors autant éviter de faire exactement la même chose deux fois
 			 */
 			
 			
@@ -382,7 +416,7 @@ abstract class Model{
 			// echo "</pre><br/>";
 			
 			// foreach($result as $cle=>$valeur){
-			foreach($resultat as $cle=>$valeur){
+			foreach($resultat as $cle => $valeur){
 				$this->$cle = $valeur;
 			}
 			
@@ -465,7 +499,7 @@ abstract class Model{
 		}
 		
 		
-		// echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
+		echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
 		
 		
 		
@@ -563,13 +597,12 @@ abstract class Model{
 	public function update(){
 		$listeProprietes = "";
 		
-
 		if($this->estAutoIncrement){
 			/*
-			*  SI la clé primaire est en auto-incrément
-			*  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça,
-			*  elle ne sera pas ajoutée dans la requête (enfin pas dans la partie SET)
-			*/
+			 *  SI la clé primaire est en auto-incrément
+			 *  ALORS on l'ajoute dans le tableau des attributs techniques, comme ça, elle ne sera pas ajoutée dans la requête (enfin pas dans la partie SET)
+			 */
+			
 			$this->attribtech[] = $this->pk;
 		}
 		
@@ -583,9 +616,10 @@ abstract class Model{
 		foreach ($this as $nomColonne=>$uneValeurColonne){
 			// Même fonctionnement que dans le create : on fait la liste des clés, et on n'ajoute que les attributs métiers (donc tout sauf ce qui est listé dans attribtech)
 			if(!in_array($nomColonne, $this->attribtech) && !is_null($uneValeurColonne)){
-				$listeProprietes .= $nomColonne . " = " . $this->formaterEnSQL($uneValeurColonne) . " , ";
+				$listeProprietes .= $nomColonne . " = " . $this->formaterChaineEnSQL($uneValeurColonne) . " , ";
 			}
 		}
+		
 		
 		$reqUpdate = "UPDATE {$this->table} SET ";			// Début requête
 		
@@ -606,9 +640,15 @@ abstract class Model{
 		*										  =  "$this->idutilisateur"
 		*										  =  "1"
 		*/
-		$valeurPk = "{$this->{$this->pk}}";
 		
-		$reqUpdate = $reqUpdate . " WHERE " . $this->ecrireClePrimaire($valeurPk);
+		
+		// echo "LE NOM PK : ";
+		// var_dump($this->pk);
+		// echo "<br/>CHU : ";
+		// var_dump($this->{$this->pk});
+		
+		
+		$reqUpdate = $reqUpdate . " WHERE " . $this->ecrireClePrimaire();
 		echo "Requête Update : <br/> <b>" . $reqUpdate . "</b>";
 		
 		
@@ -645,12 +685,12 @@ abstract class Model{
 	
 	
 	/*
-	* formaterEnSQL -	Formate une chaîne pour l'écrire dans des requêtes SQL sans problème :
+	* formaterChaineEnSQL -	Formate une chaîne pour l'écrire dans des requêtes SQL sans problème :
 	*					- transforme les booléens en " TRUE " ou " FALSE "
 	*					- transforme les chaînes vides en NULL
 	*					- transforme les chaînes pour supprimer les caractères sensibles (comme des apostrophes) en caractères HTML
 	*/
-	public function formaterEnSQL($chaineAFormater){
+	public function formaterChaineEnSQL($chaineAFormater){
 		if(is_bool($chaineAFormater)){
 			$nouvelleChaine = $chaineAFormater ? " TRUE " : " FALSE";
 		}else{

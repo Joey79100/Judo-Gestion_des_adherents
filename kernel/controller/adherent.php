@@ -29,6 +29,8 @@
 		 *						(vue identique à la fonction modifier())
 		 */
 		public function ajouter(){
+			$this->set(array('saison' => $this->saison->find("sai_debut = " . $_SESSION['saison']['debut']. " AND sai_fin = " . $_SESSION['saison']['fin'])[0]));
+				
 			$this->set(array('famille' => $this->famille->find()));
 			$this->set(array('lien_parente' => $this->lien_parente->find()));
 			$this->set(array('type_contact' => $this->type_contact->find()));
@@ -210,7 +212,8 @@
 				// Si on n'a pas un numéro dans l'URL on redirige vers Ajouter
 				header("Location: " . ADHERENT . "ajouter");
 			}else{
-				$saison_id = $this->saison->find("sai_debut = " . $_SESSION['saison']['debut']. " AND sai_fin = " . $_SESSION['saison']['fin'])[0]['sai_id'];
+				$this->set(array('saison' => $this->saison->find("sai_debut = " . $_SESSION['saison']['debut']. " AND sai_fin = " . $_SESSION['saison']['fin'])[0]));
+				$saison_id = $this->viewvar['saison']['sai_id'];
 				
 				$this->set(array('lien_parente' => $this->lien_parente->find()));
 				$this->set(array('type_contact' => $this->type_contact->find()));
@@ -239,6 +242,8 @@
 		 *						de la base.
 		 */
 		public function update(){
+			
+			echo "<div class='debug'>";
 			
 			echo "<pre>";
 			print_r($_POST);
@@ -332,6 +337,42 @@
 			
 			echo "<hr/>";
 			
+			
+			
+			/*
+			 * Mise à jour du cours suivi
+			 */
+			
+			$this->suivre->setSui_saison($_POST['saison']);
+			$this->suivre->setSui_adherent($_POST['id']);
+			$this->suivre->setSui_cours($_POST['cours']);
+			$this->suivre->update();
+			
+			
+			
+			
+			/*
+			 * Si la ceinture n'est plus la même (donc si les infos n'existe pas dans la base), enregistrer un nouveau passage de ceinture
+			 */
+			$lePassage = $this->passer->find("pas_adherent = " . $_POST['id'] . " AND pas_ceinture = " . $_POST['ceinture'] . " AND pas_date = '" . date_toSQL($_POST['date_passage_ceinture']) . "' ");
+			
+			
+			if(!isset($lePassage)){
+				$this->passer->setPas_saison($_POST['saison']);
+				$this->passer->setPas_adherent($_POST['id']);
+				$this->passer->setPas_ceinture($_POST['ceinture']);
+				$this->passer->setPas_date($_POST['date_passage_ceinture']);
+				
+				echo "Enregistrement d'un nouveau passage de ceinture...";
+				
+				$this->passer->create();
+			}
+			
+			
+			
+			echo "<hr/> <br/><br/><br/> <a href='" . ADHERENT . "modifier/" . $_POST['id'] . "'> Retour </a> <br/><br/><br/> <hr/>";
+			
+			echo "</div>";
 			
 			
 			// exit(header("Location: " . ADHERENT . 'modifier/' . $_POST['id']));

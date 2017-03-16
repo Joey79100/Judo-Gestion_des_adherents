@@ -8,7 +8,7 @@
 	$modif = !is_null($this->adherent->getAdh_id());
 	
 	$action = $modif ? "Modifier" : "Ajouter";
-	echo "<div class='title'>" . $action . " un adhérent : Saison " . $_SESSION['saison']['debut'] . " - " . $_SESSION['saison']['fin'] . "</div>";
+	echo "<div class='title'>" . $action . " un adhérent : Saison " . $this->viewvar['saison']['sai_debut'] . " - " . $this->viewvar['saison']['sai_fin'] . "</div>";
 	
 	
 	if(!$modif){
@@ -25,6 +25,9 @@
 		echo "<form method='post' class='form-ajout-modif-adherent' name='ajoutAdherent' id='ajoutAdherent' action='" . ADHERENT . "create'>";
 	}
 	
+	
+	// Stockage de l'ID de la saison pour pas avoir à le recharger, et également pour récupérer facilement la saison en JS
+	echo "<input type='hidden' id='saison' name='saison' value='" . $this->viewvar['saison']['sai_id'] . "' data-debut='" . $this->viewvar['saison']['sai_debut'] . "' data-fin='" . $this->viewvar['saison']['sai_fin'] . "'/>";
 	
 	echo "
 		<fieldset>
@@ -308,7 +311,7 @@
 					
 					<br/>
 					
-					<label for='date_passage_ceinture' class='libelle'>Date de passage :</label>
+					<label for='date_passage_ceinture' class='libelle'>Date de passage</label>
 					<input type='date' name='date_passage_ceinture' id='date_passage_ceinture' class='date_picker' placeholder='Jour/Mois/Année' required autocomplete='off'";
 					
 					if($modif){
@@ -334,17 +337,6 @@
 		</div>
 	</form>
 </div>";
-
-
-
-
-
-
-
-
-
-
-
 ?>
 
 
