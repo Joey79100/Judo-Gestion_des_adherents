@@ -37,32 +37,6 @@ $( "#modifAdherent" ).submit(function( event ) {
 		+ "Êtes-vous vraiment sûr de vouloir l'inscrire à ce cours ?"
 		
 		age_cours_ok = confirm(text_dialog);
-		
-		
-		/*
-		// $("#confirmation-age").text("Pour suivre le cours " + cours_nom + ", il est nécessaire d'avoir au moins " + cours_ageMini + " ans." + "\n"
-		// + "Or, l'adhérent n'a que " + adherent_age + " ans. " + "\n"
-		// + "\n"
-		// + "Êtes-vous vraiment sûr de vouloir lui passer cette ceinture ?");
-	
-		// $( function() {
-			// $( "#confirmation-age" ).dialog({
-				// text: "blablabla",
-				// resizable: false,
-				// height: "auto",
-				// width: 400,
-				// modal: true,
-				// buttons: {
-					// "Confirmer": function() {
-						// $( this ).dialog( "close" );
-					// },
-					// Cancel: function() {
-						// $( this ).dialog( "close" );
-					// }
-				// }
-			// });
-		// } );
-		*/
 	}
 	
 	if(adherent_age < ceinture_ageMini){
@@ -135,14 +109,17 @@ $( "#modifAdherent" ).submit(function( event ) {
 		console.log("contactsASupprimer = " + contactsASupprimer);
 	}
 
-	
-
+	console.log("\n");
+	console.log("contactsASupprimer : " + contactsASupprimer);
+	console.log("contactsAModifier : " + contactsAModifier);
+	console.log("contactsAAjouter : " + contactsAAjouter);
+	console.log("\n");
 
 	
 	// Envoi du formulaire
 	
 	if(age_cours_ok && age_ceinture_ok){
-		document.modifAdherent.submit();
+		// document.modifAdherent.submit();
 	}
 	
 });

@@ -141,7 +141,7 @@
 					
 					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $int]));
 					$this->contact->setCon_type($_POST['type_contact_' . $int]);
-					$this->contact->setCon_contact($_POST['data_contact_' . $int]);
+					$this->contact->setCon_contact($_POST['le_contact_' . $int]);
 					$this->contact->setCon_adherent($this->adherent->getAdh_id());
 					
 					$this->contact->create();
@@ -221,7 +221,8 @@
 				$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
 				
 				$this->adherent->setAdh_id($adh_id);
-				$this->set(array('adherent' => $this->adherent->read(null, 2)));
+				// $this->set(array('adherent' => $this->adherent->read(null, 1)));
+				$this->set(array('adherent' => $this->adherent->find("adh_id = " . $adh_id, null, 1, array("position"), 2)[0]));
 				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
 				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id, null, null, null, 1)[0]));
 				
@@ -230,8 +231,9 @@
 				$ageCeinturePortee = $this->viewvar['passer']['pas_ceinture']['cei_age_mini'];				// Affichage des ceintures de niveau supérieur ou égal uniquement
 				$this->set(array('ceinture' => $this->ceinture->find("cei_age_mini >= " . $ageCeinturePortee, "cei_age_mini NULLS FIRST")));
 				
-				
+				// echo "<div class='debug'>";
 				// var_dump($this->viewvar);
+				// echo "</div>";
 				// die();
 				
 				$this->render("ajout_modif");
@@ -263,6 +265,11 @@
 			 */
 			$this->adherent->setAdh_id($_POST['id']);
 			
+			$this->adherent->setAdh_nom($_POST['nom']);
+			$this->adherent->setAdh_prenom($_POST['prenom']);
+			$this->adherent->setAdh_genre($_POST['genre']);
+			$this->adherent->setAdh_date_naissance(date_toSQL($_POST['date_naissance']));
+			
 			$this->adherent->setAdh_adresse_postale($_POST['adresse']);
 			$this->adherent->setAdh_adresse_complement($_POST['adresse2'] ?? "");
 			$this->adherent->setAdh_code_postal($_POST['code_postal']);
@@ -281,7 +288,9 @@
 			
 			
 			
+			
 			echo "<hr/>";
+			
 			
 			
 			
@@ -292,7 +301,7 @@
 				foreach($contactsAAjouter as $unContact){
 					echo "<br/> Création du contact " . $unContact . "...<br/>";
 					
-					$this->contact->setCon_contact($_POST['data_contact_' . $unContact]);
+					$this->contact->setCon_contact($_POST['le_contact_' . $unContact]);
 					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $unContact]));
 					$this->contact->setCon_type($_POST['type_contact_' . $unContact]);
 					$this->contact->setCon_adherent($this->adherent->getAdh_id());
@@ -305,7 +314,9 @@
 				}
 			}
 			
+			
 			echo "<hr/>";
+			
 			
 			
 			// Modification dans la base des contacts qui ont été modifiés dans le formulaire
@@ -316,7 +327,6 @@
 					echo "<br/> Mise à jour du contact " . $unContact . "...<br/>";
 					
 					$this->contact->setCon_id($unContact);
-					
 					$this->contact->setCon_contact($_POST['data_contact_' . $unContact]);
 					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $unContact]));
 					$this->contact->setCon_type($_POST['type_contact_' . $unContact]);
@@ -327,7 +337,9 @@
 				}
 			}
 			
+			
 			echo "<hr/>";
+			
 			
 			
 			// Suppression dans la base des contacts qui ont été supprimés dans le formulaire
@@ -342,7 +354,9 @@
 				}
 			}
 			
+			
 			echo "<hr/>";
+			
 			
 			
 			

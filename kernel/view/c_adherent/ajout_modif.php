@@ -44,7 +44,7 @@
 					<input id='nom' name='nom' id='nom' type='text' placeholder=\"Nom de l'adhérent\" required";
 	
 					if($modif){
-						echo " value = '" . $this->viewvar['adherent']['adh_nom']. "' disabled";
+						echo " value = '" . $this->viewvar['adherent']['adh_nom']. "' ";
 					}
 					
 	echo "			/>
@@ -55,7 +55,7 @@
 					<input name='prenom' id='prenom' type='text' placeholder=\"Prénom de l'adhérent\" required";
 	
 					if($modif){
-						echo " value = '" . $this->viewvar['adherent']['adh_prenom']. "' disabled";
+						echo " value = '" . $this->viewvar['adherent']['adh_prenom']. "' ";
 					}
 					
 	echo "			/>
@@ -66,7 +66,7 @@
 					<input name='famille' id='famille' type='text' placeholder='Famille' required ";
 	
 					if($modif){
-						echo " value = '" . $this->viewvar['adherent']['adh_famille']['fam_libelle']. "' disabled";
+						echo " value = '" . $this->viewvar['adherent']['adh_famille']['fam_libelle']. "' ";
 					}
 					
 	echo "			/>
@@ -86,7 +86,6 @@
 						<input type='radio' name='genre' id='genre_m' value='M' required ";
 	
 					if($modif){
-						echo " disabled";
 						if($this->viewvar['adherent']['adh_genre'] == 'M'){
 							echo " checked";
 						}
@@ -102,7 +101,6 @@
 						<input type='radio' name='genre' id='genre_f' value='F' required ";
 	
 					if($modif){
-						echo " disabled";
 						if($this->viewvar['adherent']['adh_genre'] == 'F'){
 							echo " checked";
 						}
@@ -117,7 +115,7 @@
 					<input type='date' name='date_naissance' id='date_naissance' class='date_picker' placeholder='Jour/Mois/Année' required autocomplete='off'";
 	
 					if($modif){
-						echo " value = '" . date_toFR($this->viewvar['adherent']['adh_date_naissance']). "' disabled";
+						echo " value = '" . date_toFR($this->viewvar['adherent']['adh_date_naissance']). "' ";
 					}
 					
 	echo "			/>

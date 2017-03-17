@@ -8,45 +8,53 @@ contactsASupprimer = [];
 
 
 /*
- * supprimerContact - Supprime la ligne correspondant à un contact.
- *		Si l'ID du contact est fourni, alors c'est que l'on est sur une page de modification des informations d'un
- *		adhérent, et donc que le contact supprimé devra également être supprimé de la base. L'ID de chaque contact
- *		supprimé sera donc enregistré dans une variable globale sous forme d'une liste d'IDs séparés par une virgule
- *		afin d'indiquer au script PHP quels contacts doivent être supprimés.
+ * supprimerContact - Supprime la ligne correspondant à un contact, et ajoute un ligne de contact vierge s'il n'y a
+ *		plus aucune ligne de contact affichée (puisqu'un adhérent doit obligatoirement avoir au moins un contact).
+ *		
+ *		Si la Div du contact avait l'attribut "data-contact_dans_la_base" à "true", alors c'est que le contact en
+ *		était présent dans la base de données, il devra donc en être supprimé devra également être supprimé.
+ *		L'ID de chaque contact supprimé sera donc enregistré dans une variable globale sous forme d'une liste d'IDs
+ *		séparés par une virgule afin d'indiquer au script PHP quels contacts doivent être supprimés.
  *
  * @param elementASupprimer	ID de la div à supprimer.
- * @param id				ID du contact dans la base - à fournir si le contact existe dans la base afin de savoir
- *							qu'il faudra le supprimer
  */
 
-function retirerContact(elementASupprimer, id = null){
-	var parent = elementASupprimer.parentElement;
+function retirerContact(elementASupprimer){
+	var parent = elementASupprimer.parentElement,
+		idContact = elementASupprimer.getAttribute("data-id_contact"),
+		contactDansLaBase = elementASupprimer.getAttribute("data-contact_dans_la_base");
+	
+	console.log(elementASupprimer);
+	
+	
+	
+	/*
+	 * Si la div à supprimer correspondait à un contact présent dans la base (attribut data-contact_dans_la_base)
+	 * alors il faudra l'en supprimer, donc on va l'inscrire dans contactsASupprimer.
+	 *
+	 * Sinon, c'est que c'était un nouveau contact qui n'est pas dans la base, mais qui avait été inscrit dans contactsAAjouter.
+	 * Il faut l'en retirer pour pas que le PHP tente d'insérer des infos qui n'existent pas.
+	 */
+	
+	if(contactDansLaBase == 'true'){
+		contactsASupprimer.push(idContact);					// Ajout de l'ID dans le tableau contactsASupprimer
+	}else{
+		var index = contactsAAjouter.indexOf(idContact);	// Recherche de la position de l'ID dans la liste contactsAAjouter
+		contactsAAjouter.splice(index, 1);					// Suppression de l'ID.
+	}
+	
+		
+	
+	/*
+	 * Suppression du contact
+	 */
 	parent.removeChild(elementASupprimer);
 	
 	
-	// Si l'ID a été fourni en paramètre, c'est que le contact était dans la base, et doit donc être supprimé également de la base,
-	// donc on doit garder l'information pour l'envoi du formulaire
-	
-	if(id == null){
-		// ID du contact non existant, donc contact qu'était pas dans la base, donc contact pas à supprimer
-		// MAIS contact à ne PAS ajouter (donc à enlever de la liste des ajouts) puisqu'il ne sera plus question de l'ajouter
-		
-		var index = contactsAAjouter.indexOf(id);
-		console.log(contactsAAjouter.splice(index, 1));
-		
-		// alert("C'était pas un contact existant");
-	}else{
-		// ID du contact existant, donc contact de la base, donc contact à supprimer de la base, donc s'en souvenir
-		contactsASupprimer.push(id);
-		
-		// alert("C'était un contact de la base");
-	}
 	
 	
-	
-	
-	// SI il n'y a plus de contact... alors il faut en rajouter puisque chaque adhérent DOIT avoir au moins un contact
-	// ajouterContact();
+	// Ajout d'un nouveau contact si tous les contacts affichés ont été supprimés
+	ajouterContactSiZeroContact();
 }
 
 
@@ -69,35 +77,20 @@ function retirerContact(elementASupprimer, id = null){
 
 function ajouterContact(contact = null){
 	var	divContacts = document.getElementById('lesContacts'),
-		premierContact,
 		contenu = "",
 		divLigneContact = document.createElement('div'),
 		classContact = "unContact",
+		idContact,
 		idDiv,
-		idDivComplet,
 		dernierID;
 		
 	
 	
 	
-
 	
-	// S'il n'existe pas encore de div dans la div #lesContacts, alors ça veut dire qu'on affiche le tout premier contact
-	premierContact = divContacts.lastChild.nodeName != 'DIV';
-	
-	
-	
-	
-	if(!contact){
-		idDiv = getDernierContact() + 1;	// On prend le dernier ID + 1
-	}else{
-		idDiv = contact['con_id'];
-	}
-	
-	
-	// puis écriture de l'ID complet de la div actuelle (libelle + numéro)
-	idDivComplet = "contact_" + idDiv;
-	
+	idContact = contact ? contact['con_id'] : getIdDernierContact() + 1;	// Si un contact est fourni, on récupère son id, sinon on prend le dernier ID + 1
+	// idContact = getIdDernierContact() + 1;									// Si un contact est fourni, on récupère son id, sinon on prend le dernier ID + 1
+	idDiv = "contact_" + idContact;									// Puis on écrit de l'ID complet de la div actuelle (libelle + numéro)
 	
 	
 	
@@ -112,8 +105,8 @@ function ajouterContact(contact = null){
 	contenu += "\
 			<div class='form-gauche'> \
 				<div class='form-gauche'> \
-					<label for='lien_" + idDivComplet + "' class='libelle'>Pour contacter</label> \
-					<input type='text' id='lien_" + idDivComplet + "' name='lien_" + idDivComplet + "' class='lien_contact' placeholder='Adhérent, père, mère...' autocomplete='off' required";
+					<label for='lien_" + idDiv + "' class='libelle'>Pour contacter</label> \
+					<input type='text' id='lien_" + idDiv + "' name='lien_" + idDiv + "' class='lien_contact' placeholder='Adhérent, père, mère...' autocomplete='off' required";
 	
 	
 	/*
@@ -131,8 +124,8 @@ function ajouterContact(contact = null){
 				</div> \
 				\
 				<div class='form-droite'> \
-					<label for='type_" + idDivComplet + "' class='libelle'>Type de contact</label> \
-					<select class='type_contact largeur-100' id='type_" + idDivComplet + "' name='type_" + idDivComplet + "'>";
+					<label for='type_" + idDiv + "' class='libelle'>Type de contact</label> \
+					<select class='type_contact largeur-100' id='type_" + idDiv + "' name='type_" + idDiv + "'>";
 	
 	
 	
@@ -169,8 +162,8 @@ function ajouterContact(contact = null){
 			\
 			<div class='form-droite'> \
 				<div class='form-tiers-1-2'> \
-					<label for='data_" + idDivComplet + "' class='libelle'>Contact</label> \
-					<input type='text' placeholder='Numéro de téléphone, email...' id='data_" + idDivComplet + "' name='data_" + idDivComplet + "' required ";
+					<label for='le_" + idDiv + "' class='libelle'>Contact</label> \
+					<input type='text' placeholder='Numéro de téléphone, email...' id='le_" + idDiv + "' name='le_" + idDiv + "' required ";
 	
 	
 	
@@ -187,22 +180,10 @@ function ajouterContact(contact = null){
 				<div class='form-tiers-3'>";
 	
 	
-	// SI on n'est pas en train d'afficher le premier contact
-	// Ou alors, qu'on est sur une modification d'adhérent
-	// Alors on peut affiche un bouton permetant de supprimer ce contact
+
+	// Affichage d'un bouton permettant de supprimer ce contact
 	
-	if(!premierContact || contact){
-		contenu += " <button type='button' class='delContact' id='del_" + idDivComplet + "' onclick='retirerContact(" + idDivComplet;
-		
-		// SI le contact avait été fourni (et donc qu'on est sur une page de modif (et donc que les contacts supprimés doivent être supprimés aussi de la base))
-		// Alors on fournit l'ID en paramètre à la fonction retirerContact()
-		
-		if(contact){
-			contenu += ", " + idDiv;
-		}
-		
-		contenu += ")'>X</button>";
-	}
+	contenu += " <button type='button' class='delContact' id='del_" + idDiv + "' onclick='retirerContact(" + idDiv + ")'>X</button>";
 	
 	contenu += "</div> \
 			</div>";
@@ -220,7 +201,12 @@ function ajouterContact(contact = null){
 	 * Création de la div et insertion dans le document HTML
 	 */
 	 
-	divLigneContact.id = idDivComplet;
+	divLigneContact.id = idDiv;
+	
+	
+	divLigneContact.setAttribute('data-contact_dans_la_base', contact ? true : false);	// Si le contact existait dans la base alors on ajoute son ID dans un attribut de la div HTML
+	
+	divLigneContact.setAttribute('data-id_contact', idContact);
 	divLigneContact.className = 'unContact form-ligne';
 	divLigneContact.style = "height:auto;";
 	
@@ -232,11 +218,38 @@ function ajouterContact(contact = null){
 	// Et si ce contact n'existait pas dans la base (donc s'il n'a pas été fourni en paramètre)
 	// Il faut penser que ça sera un nouveau contact à ajouter dans la base
 	if(!contact){
-		contactsAAjouter.push(idDiv);
+		contactsAAjouter.push(idContact);
 	}
 }
 
 
+
+
+
+
+
+/*
+ * Vérifie s'il existe des contacts sur la page, et si ce n'est pas le cas, alors en ajoute un
+ */
+function ajouterContactSiZeroContact(){
+	var divContacts = document.getElementById('lesContacts');
+	
+	
+	
+	// Si le dernier élément dans la divContacts n'est pas une DIV (donc s'il n'y a que des espaces, tabulation... donc si c'est du texte)
+	// Alors on ajoute un contact
+	
+	if(!(divContacts.lastChild.nodeName == 'DIV')){
+		ajouterContact();
+	}
+	
+	
+	
+	
+	
+	
+	// SI il n'y a plus de contact... alors il faut en rajouter puisque chaque adhérent DOIT avoir au moins un contact
+}
 
 
 
@@ -251,12 +264,17 @@ function ajouterContact(contact = null){
  * @return				L'ID de la dernière div si elle existe, ou sinon 0
  */
  
-function getDernierContact(){
-	var divContacts = document.getElementById('lesContacts');
+function getIdDernierContact(){
+	var divContacts = document.getElementById('lesContacts'),
+		derniereDiv = divContacts.lastChild;
 	
 	// Si le dernier élément dans divContacts est une div, alors on récupère son id 
-	if(divContacts.lastChild.nodeName == 'DIV'){
-		dernierID = parseInt(divContacts.lastChild.id.match(/\d+/), 10);
+	if(derniereDiv.nodeName == 'DIV'){
+		console.log("derniereDiv: " + derniereDiv);
+		
+		dernierID = parseInt(derniereDiv.getAttribute('data-id_contact'));
+		
+		console.log("dernierID : " + dernierID);
 	}else{
 		dernierID = 0;
 	}
@@ -267,5 +285,12 @@ function getDernierContact(){
 
 
 
+
+
+
+
+
+// Au premier affichage, s'il n'existe pas de contact dans la page, alors on en affiche un
+// ajouterContactSiZeroContact();
 
 
