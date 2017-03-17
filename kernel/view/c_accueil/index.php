@@ -25,7 +25,7 @@
 		?>
 		</select>
 		<button type='submit' form='formsaison'>Changer</button>
-	
+	</form>
 </div>
 
 <div class='window'>

@@ -224,16 +224,25 @@
 				// $this->set(array('adherent' => $this->adherent->read(null, 1)));
 				$this->set(array('adherent' => $this->adherent->find("adh_id = " . $adh_id, null, 2, array("position"), 1)[0]));
 				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, 2, array('adherent'), null)));
-				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id, null, 1, null, null)[0]));
+				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id)[0]));
 				
 				
 				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1, null, 1)[0]));
 				$ageCeinturePortee = $this->viewvar['passer']['pas_ceinture']['cei_age_mini'];				// Affichage des ceintures de niveau supérieur ou égal uniquement
 				$this->set(array('ceinture' => $this->ceinture->find("cei_age_mini >= " . $ageCeinturePortee, "cei_age_mini NULLS FIRST")));
 				
-				// echo "<div class='debug'>";
-				// var_dump($this->viewvar);
-				// echo "</div>";
+				// echo "<div class='debug'><pre>";
+				// print_r($this->viewvar);
+				// echo "</pre></div>";
+				
+				echo "<div class='debug'><pre>";
+				print_r($this->viewvar['suivre']);
+				echo "</pre></div>";
+				
+				echo "<div class='debug'><pre>";
+				print_r($this->viewvar['cours']);
+				echo "</pre></div>";
+				
 				// die();
 				
 				$this->render("ajout_modif");
@@ -369,7 +378,7 @@
 			$this->suivre->setSui_cours($_POST['cours']);
 			$this->suivre->update();
 			
-			
+			// die();
 			
 			
 			/*
@@ -397,6 +406,45 @@
 			
 			
 			// exit(header("Location: " . ADHERENT . 'modifier/' . $_POST['id']));
+		}
+		
+		
+		
+		
+		
+		/*
+		 * liste_entiere() - Affiche la liste entière des adhérents, une saison à la fois
+		 */
+		public function liste_entiere(){
+			$this->set(array('saison' => $this->saison->find()));
+			
+			
+			if(isset($_POST['saison'])){
+				
+			}
+			$saison_id = $_SESSION['saison']['id'];
+			
+			
+			
+			
+			
+			$this->set(array("inscrire" => $this->inscrire->find("ins_saison = " . $saison_id)));
+			
+			
+			
+			foreach($this->viewvar['inscrire'] as $uneInscription){
+				$tousLesAdherents[] = $this->adherent->read($uneInscription['ins_adherent']);
+			}
+			
+			$this->set(array("adherent" => $tousLesAdherents));
+			
+			
+			
+			echo "<div class='debug'><pre>";
+			print_r($this->viewvar);
+			echo "</pre></div>";
+			
+			$this->render("liste_entiere");
 		}
 		
 		
@@ -542,11 +590,11 @@
 			
 			$this->render("liste_par_cours");
 		}
-	
-	
-	
-	
-			
+		
+		
+		
+		
+		
 		/*
 		 * getIdLienParente - Récupère l'ID du lien de parenté passé en paramètre en fonction de son libellé, et s'il n'existe pas, le crée.
 		 *

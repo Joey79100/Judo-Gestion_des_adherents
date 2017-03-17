@@ -448,7 +448,7 @@ input:disabled{
 
 
 
-#addContact{
+.boutonAjout{
 	text-indent: -9999px;	/* Paliatif pour cacher le texte (le X) qu'on veut remplacer par une image */
 	
 	background-image: url("material/svg/ic_add_circle_outline_48px.svg");
@@ -467,12 +467,12 @@ input:disabled{
 
 
 /*
-#addContact{
+.boutonAjout{
     padding-bottom:1em;
 	vertical-align:center;
 	line-height:2em;
 }
-#addContact::before{
+.boutonAjout::before{
 	display: inline-block;
 	content: ' ';
 	background-image: url("material/svg/ic_add_circle_outline_48px.svg");
@@ -485,13 +485,13 @@ input:disabled{
 
 
 /*
-#addContact::before{
+.boutonAjout::before{
 	content:'';
 	display: inline-block;
 	width:50px;
 }
 
-#addContact::after{
+.boutonAjout::after{
 	content: url("material/svg/ic_add_circle_outline_48px.svg");
 	display: inline-block;
 	position:absolute;

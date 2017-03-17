@@ -206,7 +206,7 @@
 				
 				
 			</div>
-			<button type='button' id='addContact' onclick='ajouterContact()'>Ajouter</button>
+			<button type='button' class='boutonAjout' id='addContact' onclick='ajouterContact()'>Ajouter</button>
 		</fieldset>
 		
 		

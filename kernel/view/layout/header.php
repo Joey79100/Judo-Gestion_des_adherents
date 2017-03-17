@@ -6,7 +6,8 @@
 		<ul>
 			<li><a href='<?php echo ADHERENT . "ajouter"; 				?>'>Ajouter/modifier</a></li>
 			<!-- <li><a href='<php echo ADHERENT . "modifier";				?>'>Modifier un adhérent</a></li> -->
-			<li><a href='<?php echo ADHERENT . "liste_par_cours"; 		?>'>Voir les cours</a></li>
+			<li><a href='<?php echo ADHERENT . "liste_entiere"; 		?>'>Adhérents de la saison</a></li>
+			<li><a href='<?php echo ADHERENT . "liste_par_cours"; 		?>'>Adhérents classés par cours</a></li>
 			<!-- <li><a href='<php echo ADHERENT . "cours_nodb"; 		?>'>Fiches de cours NO DB</a></li> -->
 			<!-- <li><a href='<php echo ADHERENT . "fiche_presence";		?>'>Fiches de présence</a></li> -->
 		</ul>

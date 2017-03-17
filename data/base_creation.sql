@@ -159,7 +159,7 @@ CREATE TABLE inscrire(
 	CONSTRAINT fk_ins_saison			FOREIGN KEY (ins_saison)				REFERENCES saison(sai_id),
 	CONSTRAINT fk_ins_adherent			FOREIGN KEY (ins_adherent)				REFERENCES adherent(adh_id),
 	CONSTRAINT c_ins_saison_adherent_unique		UNIQUE(ins_saison, ins_adherent)
-)
+);
 
 
 
@@ -168,7 +168,7 @@ CREATE TABLE inscrire(
 
 
 
-;/* Table : Suivre
+/* Table : Suivre
  * Dépend de :	SAISON
  *				ADHERENT
  *				COURS

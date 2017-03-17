@@ -18,10 +18,16 @@
 			if(isset($_POST['saison'])){
 				$saisonChoisie = $this->saison->read($_POST['saison']);
 				
-				// $_SESSION['saison']['id'] = $saisonChoisie['sai_id'];	// Est-ce utile ?
+				$_SESSION['saison']['id'] = $_POST['saison'];	// Est-ce utile ?
 				$_SESSION['saison']['debut'] = $saisonChoisie['sai_debut']; 
 				$_SESSION['saison']['fin'] = $saisonChoisie['sai_fin'];
+			}else{
+				$saisonChoisie = $this->saison->find("sai_debut = " . $_SESSION['saison']['debut'] . "AND sai_fin = " . $_SESSION['saison']['fin'])[0];
+				
+				$_SESSION['saison']['id'] = $saisonChoisie['sai_id'];	// Est-ce utile ?
 			}
+			
+			// var_dump($_SESSION);
 			
 			$this->render("index");
 		}
