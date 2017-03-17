@@ -93,65 +93,23 @@ abstract class Model{
 		/*
 		 * Lecture du fichier de conf pour récupérer les informations de connexion à la base,
 		 * et si des paramètres sont absents alors on créée le fichier et on y entre des paramètres par défaut.
-		 *
-		 * TROUVER UNE SOLUTION PLUS ECONOME EN IF...
 		 */
-		if(file_exists($chemin_conf)){
-			$infos_connexion = parse_ini_file($chemin_conf, true);		// Récupération des infos du fichier de configuration
-			
-			if(isset($infos_connexion['database']['type'])){
-				$type = $infos_connexion['database']['type'];
-			}else{
-				$type = 'pgsql';
-				ini_write($chemin_conf, 'database', 'type', $type);
-			}
-			
-			if(isset($infos_connexion['database']['host'])){
-				$host = $infos_connexion['database']['host'];
-			}else{
-				$host = 'localhost';
-				ini_write($chemin_conf, 'database', 'host', $host);
-			}
-			
-			if(isset($infos_connexion['database']['port'])){
-				$port = $infos_connexion['database']['port'];
-			}else{
-				$port = '5432';
-				ini_write($chemin_conf, 'database', 'port', $port);
-			}
-			
-			if(isset($infos_connexion['database']['name'])){
-				$nomdb = $infos_connexion['database']['name'];
-			}else{
-				$nomdb = 'judo';
-				ini_write($chemin_conf, 'database', 'name', $nomdb);
-			}
-			
-			if(isset($infos_connexion['database']['user'])){
-				$user = $infos_connexion['database']['user'];
-			}else{
-				$user = 'postgres';
-				ini_write($chemin_conf, 'database', 'user', $user);
-			}
-			
-			if(isset($infos_connexion['database']['password'])){
-				$mdp = $infos_connexion['database']['password'];
-			}else{
-				$mdp = 'pgadmin';
-				ini_write($chemin_conf, 'database', 'password', $mdp);
-			}
-		}else{
-			$type = 'pgsql';
+		 
+		$infos_connexion = file_exists($chemin_conf) ? parse_ini_file($chemin_conf, true)  :  array();		// Récupération des infos du fichier de configuration
+		
+		$type = $infos_connexion['database']['type'] ?? 'pgsql';
+		$host = $infos_connexion['database']['host'] ?? 'localhost';
+		$port = $infos_connexion['database']['port'] ?? '5432';
+		$nomdb = $infos_connexion['database']['name'] ?? 'judo';
+		$user = $infos_connexion['database']['user'] ?? 'postgres';
+		$mdp = $infos_connexion['database']['password'] ?? 'pgadmin';
+		
+		if(!file_exists($chemin_conf)){
 			ini_write($chemin_conf, 'database', 'type', $type);
-			$host = 'localhost';
 			ini_write($chemin_conf, 'database', 'host', $host);
-			$port = '5432';
 			ini_write($chemin_conf, 'database', 'port', $port);
-			$nomdb = 'judo';
 			ini_write($chemin_conf, 'database', 'name', $nomdb);
-			$user = 'postgres';
 			ini_write($chemin_conf, 'database', 'user', $user);
-			$mdp = 'pgadmin';
 			ini_write($chemin_conf, 'database', 'password', $mdp);
 		}
 		
@@ -216,7 +174,7 @@ abstract class Model{
 		
 		$reqIns = "INSERT INTO {$this->table} ($listeProprietes) VALUES ($listeValeurs)";
 		
-		// echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
+		echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
 		
 		
 		
@@ -436,15 +394,15 @@ abstract class Model{
 	*
 	* @param	$condition				Spécifie la condition de la recherche (WHERE...)
 	* @param	$ordre					Spécifie le tri des résultats (ORDER BY...)
-	* @param	$nbresultats			Limite le nombre de résultats retournés (limit)
-	* @param	$clesAOmettre			Indiquer quelles clés étrangères ne nous intéressent pas pour raccourcir la recherche
 	* @param	$profondeurRecherche	Spécifie à quelle 'pronfondeur' rechercher les clés étrangères dans la base. En gros ça indique
 	*									jusqu'à combien de clés étrangères récupérées on arrête de chercher les clés étrangères des tables
 	*									étrangères déjà récupérées.
+	* @param	$clesAOmettre			Indiquer quelles clés étrangères ne nous intéressent pas pour raccourcir la recherche
+	* @param	$nbresultats			Limite le nombre de résultats retournés (limit)											/!\ UNIQUEMENT POUR LE DEVELOPPEMENT, A SUPPRIMER PAR LA SUITE /!\
 	*
 	* @return	Tableau des enregistrements correspondant à la requête
 	*/
-	public function find($condition = null, $ordre = null, $nbresultats = null, $clesAOmettre = array(), $profondeurRecherche = -1){
+	public function find($condition = null, $ordre = null, $profondeurRecherche = -1, $clesAOmettre = array(), $nbresultats = null){
 		// echo "<hr/>ENTREE DANS $this->table::find()";
 		
 		if($clesAOmettre != null){
@@ -629,7 +587,7 @@ abstract class Model{
 		
 		
 		$reqUpdate = $reqUpdate . " WHERE " . $this->ecrireClePrimaire();
-		echo "Requête Update : <br/> <b>" . $reqUpdate . "</b>";
+		echo "<br/>model::update() -> \$reqUpdate : <br/>" . $reqUpdate . "<br/>";
 		
 		
 		$base = $this->connexion();
@@ -650,11 +608,13 @@ abstract class Model{
 	*/
 	public function delete(){
 		$valeurPk = "{$this->{$this->pk}}";
-		$req= "DELETE FROM {$this->table} WHERE {$this->pk} =  $valeurPk";
-		echo $req;
+		
+		$reqDelete= "DELETE FROM {$this->table} WHERE {$this->pk} = ". $valeurPk;
+		
+		echo "<br/>model::delete() -> \$reqUpdate : <br/>" . $reqDelete . "<br/>";
 		
 		$base = $this->connexion();
-		$base->query($req);
+		$base->query($reqDelete);
 		$base = null;
 	}
 	

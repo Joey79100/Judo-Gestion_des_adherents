@@ -28,6 +28,8 @@
 			$new_content .= "[$section]\n$section_content\n\n";
 		}
 		file_put_contents($config_file, $new_content);
+		
+		return $value;
 	}
 	
 	

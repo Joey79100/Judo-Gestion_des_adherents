@@ -119,7 +119,7 @@ $( "#modifAdherent" ).submit(function( event ) {
 	// Envoi du formulaire
 	
 	if(age_cours_ok && age_ceinture_ok){
-		// document.modifAdherent.submit();
+		document.modifAdherent.submit();
 	}
 	
 });

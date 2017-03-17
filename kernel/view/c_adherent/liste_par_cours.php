@@ -43,7 +43,7 @@
 		
 		echo "<div class='window'>
 			<span>
-				<h1 class='div_cours_titre' id='div_cours_titre_" . $unCours['cou_id'] . "'>" . $unCours['cou_libelle'] . "</div>
+				<div class='title div_cours_titre' id='div_cours_titre_" . $unCours['cou_id'] . "'>" . $unCours['cou_libelle'] . "</div>
 				<button type='button' id='div_cours_" . $unCours['cou_id'] . "_button' class='boutonOuvertureCours'>-</button>
 			</span>
 			

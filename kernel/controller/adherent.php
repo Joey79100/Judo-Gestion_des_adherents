@@ -32,12 +32,12 @@
 			$this->set(array('saison' => $this->saison->find("sai_debut = " . $_SESSION['saison']['debut']. " AND sai_fin = " . $_SESSION['saison']['fin'])[0]));
 				
 			$this->set(array('famille' => $this->famille->find()));
-			$this->set(array('lien_parente' => $this->lien_parente->find()));
-			$this->set(array('type_contact' => $this->type_contact->find()));
-			$this->set(array('position' => $this->position->find()));
-			$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
-			$this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
-			$this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", null, array("position"), 2)));
+			// $this->set(array('lien_parente' => $this->lien_parente->find()));
+			// $this->set(array('type_contact' => $this->type_contact->find()));
+			// $this->set(array('position' => $this->position->find()));
+			// $this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
+			// $this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
+			// $this->set(array('adherent' => $this->adherent->find(null, "adh_nom, adh_prenom", 2, array("position"), null)));
 			
 			$this->render("ajout_modif");
 		}
@@ -222,9 +222,9 @@
 				
 				$this->adherent->setAdh_id($adh_id);
 				// $this->set(array('adherent' => $this->adherent->read(null, 1)));
-				$this->set(array('adherent' => $this->adherent->find("adh_id = " . $adh_id, null, 1, array("position"), 2)[0]));
-				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
-				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id, null, null, null, 1)[0]));
+				$this->set(array('adherent' => $this->adherent->find("adh_id = " . $adh_id, null, 2, array("position"), 1)[0]));
+				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, 2, array('adherent'), null)));
+				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id, null, 1, null, null)[0]));
 				
 				
 				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1, null, 1)[0]));
@@ -327,7 +327,7 @@
 					echo "<br/> Mise à jour du contact " . $unContact . "...<br/>";
 					
 					$this->contact->setCon_id($unContact);
-					$this->contact->setCon_contact($_POST['data_contact_' . $unContact]);
+					$this->contact->setCon_contact($_POST['le_contact_' . $unContact]);
 					$this->contact->setCon_lien_parente($this->getIdLienParente($_POST['lien_contact_' . $unContact]));
 					$this->contact->setCon_type($_POST['type_contact_' . $unContact]);
 					$this->contact->setCon_adherent($this->adherent->getAdh_id());
@@ -443,7 +443,7 @@
 			$limiteNbCours = 2;
 			
 			$lesAdherentsClassesParCours = array();
-			$tousLesCours = $this->cours->find(null, null, $limiteNbCours, null, null);
+			$tousLesCours = $this->cours->find(null, null, null, null, $limiteNbCours);
 			
 			if($limiteNbCours){
 				echo "
@@ -479,7 +479,7 @@
 								
 						// --- Récupération de la ceinture ---
 						
-						$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $idAdherent, 'pas_date DESC', 1)[0];	// Trouver le numéro de la dernière ceinture de l'adhérent...
+						$lePassageDeCeinture = $this->passer->find('pas_saison = ' . $saisonId . 'AND pas_adherent = ' . $idAdherent, 'pas_date DESC', null, null, 1)[0];	// Trouver le numéro de la dernière ceinture de l'adhérent...
 						
 						
 						$laCeinture = isset($lePassageDeCeinture) ? $this->ceinture->read($lePassageDeCeinture['pas_ceinture']) : null;									// ..trouver le nom de cette ceinture... (si un passage de ceinture a été trouvé, mais avec des vraies données, il y aura toujours au moins une ceinture pour chaque adhérent)

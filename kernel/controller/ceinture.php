@@ -34,7 +34,7 @@
 			$idSaison = $this->saison->find('sai_debut = ' . $_SESSION['saison']['debut'] . ' AND sai_fin = ' . $_SESSION['saison']['fin'])
 						[0]['sai_id'];
 			
-			$this->set(array('inscription' => $this->suivre->find('sui_cours = ' . $idCours . ' AND sui_saison = ' . $idSaison, 'sui_cours, sui_adherent', $nbmax, array('saison', 'famille'), 1)));
+			$this->set(array('inscription' => $this->suivre->find('sui_cours = ' . $idCours . ' AND sui_saison = ' . $idSaison, 'sui_cours, sui_adherent', 1, array('saison', 'famille'), $nbmax)));
 			
 			
 			
@@ -45,7 +45,7 @@
 		
 		public function ajouter(){
 			// Récupération de toutes les ceintures entrées dans la base
-			$this->set(array('ceintures' => $this->ceinture->find(null, 'cei_id DESC', null, null)));
+			$this->set(array('ceintures' => $this->ceinture->find(null, 'cei_id DESC')));
 			
 			$this->render("ajouter");
 		}

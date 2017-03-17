@@ -40,6 +40,11 @@ function retirerContact(elementASupprimer){
 		contactsASupprimer.push(idContact);					// Ajout de l'ID dans le tableau contactsASupprimer
 	}else{
 		var index = contactsAAjouter.indexOf(idContact);	// Recherche de la position de l'ID dans la liste contactsAAjouter
+		
+		if(index != -1){
+			contactsAAjouter.splice(index, 1);				// Si l'ID existe dans le tableau, alors l'en enlever
+		}
+		var index = contactsAAjouter.indexOf(idContact);	// Recherche de la position de l'ID dans la liste contactsAAjouter
 		contactsAAjouter.splice(index, 1);					// Suppression de l'ID.
 	}
 	
@@ -106,7 +111,7 @@ function ajouterContact(contact = null){
 			<div class='form-gauche'> \
 				<div class='form-gauche'> \
 					<label for='lien_" + idDiv + "' class='libelle'>Pour contacter</label> \
-					<input type='text' id='lien_" + idDiv + "' name='lien_" + idDiv + "' class='lien_contact' placeholder='Adhérent, père, mère...' autocomplete='off' required";
+					<input type='text' id='lien_" + idDiv + "' name='lien_" + idDiv + "' class='lien_contact' placeholder='Adhérent, père, mère...' autocomplete='off' onchange='contactModifie(" + idContact + ")' required";
 	
 	
 	/*
@@ -125,7 +130,7 @@ function ajouterContact(contact = null){
 				\
 				<div class='form-droite'> \
 					<label for='type_" + idDiv + "' class='libelle'>Type de contact</label> \
-					<select class='type_contact largeur-100' id='type_" + idDiv + "' name='type_" + idDiv + "'>";
+					<select class='type_contact largeur-100' id='type_" + idDiv + "' name='type_" + idDiv + "' onchange='contactModifie(" + idContact + ")' >";
 	
 	
 	
@@ -163,7 +168,7 @@ function ajouterContact(contact = null){
 			<div class='form-droite'> \
 				<div class='form-tiers-1-2'> \
 					<label for='le_" + idDiv + "' class='libelle'>Contact</label> \
-					<input type='text' placeholder='Numéro de téléphone, email...' id='le_" + idDiv + "' name='le_" + idDiv + "' required ";
+					<input type='text' placeholder='Numéro de téléphone, email...' id='le_" + idDiv + "' name='le_" + idDiv + "' onchange='contactModifie(" + idContact + ")' required ";
 	
 	
 	
@@ -221,6 +226,8 @@ function ajouterContact(contact = null){
 		contactsAAjouter.push(idContact);
 	}
 }
+
+
 
 
 
@@ -290,7 +297,19 @@ function getIdDernierContact(){
 
 
 
-// Au premier affichage, s'il n'existe pas de contact dans la page, alors on en affiche un
-// ajouterContactSiZeroContact();
-
+/*
+ * contactModifie - Ajoute l'ID passé en paramètre au tableau contactsAModifier pour que le script PHP
+ * 
+ * @param idContact		L'ID du contact
+ */
+ 
+function contactModifie(idContact){
+	var index = contactsAModifier.indexOf(idContact);
+	console.log(index);
+	
+	// Si l'ID n'existe pas déjà dans la liste, alors on peut l'y ajouter
+	if(index == -1){
+		contactsAModifier.push(idContact);
+	}
+}
 

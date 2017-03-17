@@ -83,7 +83,7 @@
 			
 			
 			try{
-				$this->position->find(null, null, 1, null, null);
+				$this->position->find(null, null, null, null, null);
 			}catch (PDOException $e){
 				erreur($e);
 			}
