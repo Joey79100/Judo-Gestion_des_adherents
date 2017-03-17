@@ -216,8 +216,7 @@ abstract class Model{
 		
 		$reqIns = "INSERT INTO {$this->table} ($listeProprietes) VALUES ($listeValeurs)";
 		
-		echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
-		
+		// echo "<br/>model::create() -> \$reqIns : <br/>" . $reqIns . "<br/>";
 		
 		
 		
@@ -225,9 +224,10 @@ abstract class Model{
 		$base->exec($reqIns);
 		
 		
+		
 		/*
 		 * Si la PK est en un ID en auto-incrément, alors on récupère l'ID de l'enregistrement tout juste créé
-		 * et on l'affecte à la propriété [clé primaire] de l'objet
+		 * et on l'affecte à la propriété <clé primaire> de l'objet
 		 */
 		if($this->estAutoIncrement){
 			$this->{$this->pk} = $base->lastInsertId($this->table . "_" . $this->pk . "_seq");
@@ -308,7 +308,7 @@ abstract class Model{
 			}
 		}
 		
-		echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
+		// echo "<br/><b>model::ecrireClePrimaire() -> \$req :</b> " . $req . "<br/>";
 		
 		
 		// echo "<br/><b><font color='blue'>SORTIE DE model::ecrireClePrimaire()</font></b><hr/>";
@@ -326,7 +326,7 @@ abstract class Model{
 	* lineExist - Vérifie si l'enregistrement d'ID spécifié en paramètre est présent dans la base en lisant la ligne y correspondant.
 	*			Retourne faux si la ligne n'existe pas, sinon retourne un tableau avec les données de l'enregistrement.
 	*
-	* @return	Tableau
+	* @return	Tableau si l'enregistrement existe, sinon Faux
 	*/
 	public function lineExist($id){
 		// echo "<br/>ENTREE DANS model::lineExist()";
@@ -373,41 +373,25 @@ abstract class Model{
 	*			Le résultat est stocké dans l'objet.
 	*
 	*			Aucune requête n'est faite directement dans le read : comme on utilise lineExist et que la
-	*			requête est complètement identique, on récupère ce que lineExist retourne directement, ça fait
-	*			une requête de moins à faire.
+	*			requête serait complètement identique, on récupère ce que lineExist retourne directement, ça
+	*			évite de refaire inutilement la même requête deux fois.
 	*
 	* @return	Tableau à deux dimensions : [<nomcolonne>][<valeurcolonne>]
 	*/
 	public function read($id = null, $profondeurRecherche = -1, $clesOmises = array()){
 		// echo "<br/><div style='margin:1em;background:linear-gradient(to bottom, lightgrey, grey);'>ENTREE DANS model::read()";
 		
+		
 		if(is_null($id)){
 			$id = $this->{$this->pk};
 			// echo "L'ID : " . $this->{$this->pk};
 			// var_dump($this);
 		}
-		// echo "<br/><b>model::read() -> $this->table \$id -> :</b><pre>";
-		// print_r($id);
-		// echo "</pre></br>";
 		
+		
+		// lineExist retourne l'enregistrement, ou faux s'il n'existe pas
 		$resultat = $this->lineExist($id);
 		
-		// if($resultat){
-			// $requete = $this->ecrireRequeteRead($id);
-			
-			// echo "<font color='red'>Requete (read())</font><br/>";
-			// $db = $this->connexion();
-			// $rep = $db->query($requete);
-			// $db = null;
-			// $result = $rep->fetch(PDO::FETCH_ASSOC);
-			// $rep->closeCursor();
-			
-			/*
-			 * OPTIMISATION :
-			 * La partie ci-dessus est volontairement commentée : avec le lineExist, on fait déjà exactement la même requête.
-			 * Alors autant éviter de faire exactement la même chose deux fois
-			 */
-			
 			
 		if($resultat){
 		
@@ -415,25 +399,21 @@ abstract class Model{
 			// print_r($resultat);
 			// echo "</pre><br/>";
 			
-			// foreach($result as $cle=>$valeur){
 			foreach($resultat as $cle => $valeur){
 				$this->$cle = $valeur;
 			}
 			
 			// echo "Clé : " . $this->fk;
 			
+			// Lecture des clés étrangères
 			if($this->fk != null){
-				// if($profondeurRecherche > -1){
-					// echo "<br/><b><i><font color='#28f' size='6'>Profondeur recherche (avant) : " . $profondeurRecherche . "</font></i></b>";
-					 $profondeurRecherche = $this->doBelongsToAssoc($profondeurRecherche, $clesOmises);
-					// echo "<br/><b><i><font color='#8bf' size='6'>Profondeur recherche (après): " . $profondeurRecherche . "</font></i></b>";
-				// }
-				
-				
+				// La profondeur recherche est décrémenté à chaque lecture afin de pouvoir s'arrêter au niveau de recherche demandé
+				$profondeurRecherche = $this->doBelongsToAssoc($profondeurRecherche, $clesOmises);
 			}
-				// echo "<br/><b>objet :</b><pre>";
-				// print_r($this);
-				// echo "</pre><br/>";
+			
+			// echo "<br/><b>objet :</b><pre>";
+			// print_r($this);
+			// echo "</pre><br/>";
 		}else{
 			die("Enregistrement introuvable !");
 		}
@@ -499,7 +479,7 @@ abstract class Model{
 		}
 		
 		
-		echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
+		// echo "<hr/>model::find() -> \$requete : <b>" . $requete . "</b><br/>";
 		
 		
 		

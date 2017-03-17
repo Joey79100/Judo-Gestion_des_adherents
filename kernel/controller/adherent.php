@@ -219,13 +219,20 @@
 				$this->set(array('type_contact' => $this->type_contact->find()));
 				$this->set(array('position' => $this->position->find()));
 				$this->set(array('cours' => $this->cours->find(null, "cou_age NULLS FIRST")));
-				$this->set(array('ceinture' => $this->ceinture->find(null, "cei_age_mini NULLS FIRST")));
 				
 				$this->adherent->setAdh_id($adh_id);
 				$this->set(array('adherent' => $this->adherent->read(null, 2)));
 				$this->set(array('contact' => $this->contact->find("con_adherent = " . $this->adherent->getAdh_id(), null, null, array('adherent'), 2)));
-				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id)[0]));
-				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1)[0]));
+				$this->set(array('suivre' => $this->suivre->find("sui_adherent = " . $this->adherent->getAdh_id() . " AND sui_saison = " . $saison_id, null, null, null, 1)[0]));
+				
+				
+				$this->set(array('passer' => $this->passer->find("pas_adherent = " . $this->adherent->getAdh_id() . " AND pas_saison = " . $saison_id, "pas_date DESC", 1, null, 1)[0]));
+				$ageCeinturePortee = $this->viewvar['passer']['pas_ceinture']['cei_age_mini'];				// Affichage des ceintures de niveau supérieur ou égal uniquement
+				$this->set(array('ceinture' => $this->ceinture->find("cei_age_mini >= " . $ageCeinturePortee, "cei_age_mini NULLS FIRST")));
+				
+				
+				// var_dump($this->viewvar);
+				// die();
 				
 				$this->render("ajout_modif");
 			}

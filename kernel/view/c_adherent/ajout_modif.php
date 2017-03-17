@@ -7,16 +7,21 @@
 	
 	$modif = !is_null($this->adherent->getAdh_id());
 	
-	$action = $modif ? "Modifier" : "Ajouter";
-	echo "<div class='title'>" . $action . " un adhérent : Saison " . $this->viewvar['saison']['sai_debut'] . " - " . $this->viewvar['saison']['sai_fin'] . "</div>";
 	
 	
 	if(!$modif){
+		echo "<div class='title'>Ajouter un adhérent : Saison " . $this->viewvar['saison']['sai_debut'] . " - " . $this->viewvar['saison']['sai_fin'] . "</div>";
 		echo "
 		<p> Entrez les informations nécessaires à l'ajout du nouvel adhérent. </p>
 		<p> S'il s'agit d'un ancien adhérent vous pouvez commencer à taper son nom puis sélectionner l'adhérent qui s'affiche à l'écran, le formulaire se chargera alors de se renseigner ses informations. </p>";
+	}else{
+		echo "<div class='title'>Modifier l'adhérent " . $this->viewvar['adherent']['adh_nom'] . " - " . $this->viewvar['adherent']['adh_prenom'] . "</div>";
 	}
 	echo "<hr/>";
+
+
+
+
 	
 	if($modif){
 		echo "<form method='post' class='form-ajout-modif-adherent' name='modifAdherent' id='modifAdherent' action='" . ADHERENT . "update'>
@@ -274,7 +279,7 @@
 					foreach($this->viewvar['cours'] as $cours){
 						echo "<option value='" . $cours['cou_id'] . "' data-age='" . $cours['cou_age'] . "' ";
 						
-						if($modif && $cours['cou_id'] == $this->viewvar['suivre']['sui_cours']){				// TODO: Récupérer le cours auquel l'adhérent est inscrit
+						if($modif && $cours['cou_id'] == $this->viewvar['suivre']['sui_cours']){
 							echo "selected";
 						}
 						
@@ -333,7 +338,7 @@
 		
 		<div class='form-boutons'>
 			<button type='reset'>Réinitialiser</button>
-			<button type='submit'>" . $action . " l'adhérent</button>
+			<button type='submit'>Enregistrer</button>
 		</div>
 	</form>
 </div>";
