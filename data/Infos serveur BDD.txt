@@ -1,0 +1,23 @@
+=================================================================
+------------------------   Serveur BDD   ------------------------
+=================================================================
+Identifiant du super-utilisateur :	root
+Mot de passe super-utilisateur :	root
+-----------------------------------------------------------------
+Nom complet d'utilisateur :		judo
+Identifiant de l'utilisateur :		judo
+Mot de passe de l'utilisateur :		judo
+=================================================================
+Adresse IP :				192.168.104.242
+Masque :				255.255.255.0
+Passerelle :				192.168.104.254
+-----------------------------------------------------------------
+Port de la base de données :		80
+-----------------------------------------------------------------
+Nom de la machine sur le réseau :	gestion
+Domaine :				adherentsjudo.com
+Adresse complète :			gestion.adherentsjudo.com
+=================================================================
+Chemin fichier conf Apache		/etc/apache2/apache2.conf
+Chemin fichier conf PostgreSQL		/etc/postgresql/9.4/main/postgresql.conf
+=================================================================

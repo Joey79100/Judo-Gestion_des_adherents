@@ -1,0 +1,17 @@
+1. Ouvrir l'accueil WAMP et se connecter sur phppgadmin.
+
+2. Dans l'écran affiché, choisir "Créer une base de données".
+
+3. Renseigner le nom de la base : "judo".
+   Attention au modèle utilisé : préférer le modèle "template0" (il est important que la base créée soit vierge).
+   Puis Créer.
+
+4. Dans la liste des bases, sékectionner la base créée ("judo").
+
+5. Ouvrir la fenêtre d'invite de commandes en ouvrant le lien "SQL" en haut à droite de la page, une fenêtre s'ouvre.
+
+6. Copier-coller l'intégralité du contenu du fichier "/data/scripts/base_creation.sql" dans la fenêtre.
+   S'assurer que "Paginer les résultats" est décoché.
+
+7. "Lancer" la requête, puis quitter.
+   

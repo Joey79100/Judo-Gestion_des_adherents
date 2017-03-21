@@ -45,7 +45,6 @@ insert into famille (fam_libelle) values ('Clark');
  * Entrées : 100
  */
  
-insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Chassier', 'Charles', 'M', '2004-10-01', '3 Chemin du Port Huault', '', 37190, 'Azay le rideau', true, true, '42291-214', 1, 1);
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Duncan', 'Lài', 'F', '1997-01-10', '40 Farragut Terrace', '', 14725, 'Cibeureum Satu', true, true, '67457-108', 9, 1);
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Reynolds', 'Örjan', 'M', '1969-08-23', '20448 Dennis Hill', '', 84900, 'Zhongba', false, false, null, 6, 1);
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Payne', 'Kuí', 'M', '1983-06-20', '310 Gerald Place', '', 55216, 'Chang’an', true, false, null, 17, 1);
@@ -145,6 +144,7 @@ insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_ad
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Lopez', 'Maïté', 'F', '1942-08-30', '9 Golden Leaf Place', '', 66771, 'Awsīm', false, false, null, 7, 2);
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Murphy', 'Dorothée', 'F', '1955-11-18', '55 Pleasure Court', '', 97983, 'New York City', false, false, null, 1, 1);
 insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Gibson', 'Kù', 'F', '2005-05-06', '8058 Glacier Hill Avenue', '', 32146, 'Wola Rębkowska', true, true, '57664-477', 8, 1);
+insert into adherent (adh_nom, adh_prenom, adh_genre, adh_date_naissance, adh_adresse_postale, adh_adresse_complement, adh_code_postal, adh_ville, adh_certificat_medical, adh_licence, adh_licence_numero, adh_famille, adh_position) values ('Price', 'Maëline', 'F', '1927-12-17', '90 Crest Line Street', '', 41504, 'Tuzha', true, true, '63629-4501', 8, 1);
 
 
 

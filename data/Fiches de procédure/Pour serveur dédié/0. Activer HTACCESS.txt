@@ -1,0 +1,6 @@
+Ouvrir le fichier /etc/apache2/apache2.conf du serveur.
+
+Dans la section "<Directory chemin-du-site>" (par exemple "<Directory /var/www>"), remplacer "AllowOverride None" par "AllowOverride All".
+
+Redémarrer le serveur apache :
+$ sudo service apache2 restart

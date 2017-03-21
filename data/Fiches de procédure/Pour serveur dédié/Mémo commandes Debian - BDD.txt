@@ -1,0 +1,44 @@
+=================================================================
+Lancer le serveur de base de données
+(ne devrait PAS être nécessaire)
+
+
+
+https://www.postgresql.org/docs/9.1/static/server-start.html
+=================================================================
+
+Donner des droits de lecture/écriture d'un fichier :
+- Se connecter en root
+	su
+- Utiliser la commande chmod
+	chmod a+r nomFichier	// donne les droits de lecture à tous
+	chmod a+w nomFichier	// donne les droits d'écriture à tous
+
+
+https://doc.ubuntu-fr.org/permissions
+=================================================================
+
+Accéder à la base de données :
+- Se connecter en root
+	su
+- Se connecter en 'postgres'
+	su postgres
+- Lancer la console psql :
+	psql
+
+=================================================================
+
+Sortir de la console psql :
+- Utiliser la commande de sortie
+	\q
+
+=================================================================
+
+Exécuter un script enregistré dans un fichier :
+- Lancer la console psql (voir ci-dessus)
+- Utiliser la commande suivante :
+	psql -d maBaseDeDonnees -a -f monFichier
+  Par exemple :
+	psql -d judo -a -f /media/sf_VB-Shared/base_creation.sql
+
+=================================================================
